@@ -88,7 +88,7 @@ public class SelectDoorActivity extends AppCompatActivity {
 
         FileInputStream fis = null;
         try {
-            fis = openFileInput(m.getPhoto());
+            fis = openFileInput(m.getId());
             Bitmap bp = BitmapFactory.decodeStream(fis);
             image.setImageBitmap(bp);
         } catch (FileNotFoundException e) {

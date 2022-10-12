@@ -7,21 +7,17 @@ import java.util.ArrayList;
 
 public class Mur implements Serializable {
     protected String id;
-    protected String photo;
     protected Piece piece;
     protected String orientation;
     protected ArrayList<Porte> listePortes;
 
-    public Mur(Piece p, String ph, String o){
+    public Mur(Piece p, String o, String id){
         piece = p;
-        photo = ph;
         orientation = o;
         listePortes = new ArrayList<>();
+        this.id = id;
     }
 
-    public String getPhoto(){
-        return photo;
-    }
 
     public void addPorte(Porte p){
         listePortes.add(p);
@@ -29,6 +25,18 @@ public class Mur implements Serializable {
 
     public String toString(){
         return orientation + listePortes.size();
+    }
+
+    public ArrayList<Porte> getListePortes(){
+        return listePortes;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public String getOrientation(){
+        return orientation;
     }
 
 }

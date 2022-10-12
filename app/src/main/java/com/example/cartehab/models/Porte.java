@@ -8,6 +8,8 @@ public class Porte implements Serializable {
     protected String id;
     protected int left, top, right, bottom;
     protected Mur mur;
+    protected Piece piece1;
+    protected Piece piece2;
 
     public Porte(Mur m, int l, int t, int r, int b){
         mur = m;
@@ -17,4 +19,27 @@ public class Porte implements Serializable {
         bottom = b;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public int getLeft() {
+        return left;
+    }
+
+    public int getTop() {
+        return top;
+    }
+
+    public int getRight() {
+        return right;
+    }
+
+    public int getBottom() {
+        return bottom;
+    }
+
+    public Mur getMur() {
+        return mur;
+    }
 }
