@@ -2,14 +2,19 @@ package com.example.cartehab.models;
 
 import android.graphics.Rect;
 
-public class Porte {
+import java.io.Serializable;
+
+public class Porte implements Serializable {
     protected String id;
-    protected Rect rectangle;
+    protected int left, top, right, bottom;
     protected Mur mur;
 
-    public Porte(Mur m, Rect rect){
+    public Porte(Mur m, int l, int t, int r, int b){
         mur = m;
-        rectangle = rect;
+        left = l;
+        top = t;
+        right = r;
+        bottom = b;
     }
 
 }

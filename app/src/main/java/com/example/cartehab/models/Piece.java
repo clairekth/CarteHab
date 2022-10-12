@@ -1,6 +1,8 @@
 package com.example.cartehab.models;
 
-public class Piece {
+import java.io.Serializable;
+
+public class Piece implements Serializable {
     protected String id;
     protected Habitation habitation;
     protected Mur murNord;
@@ -14,5 +16,9 @@ public class Piece {
 
     public void setMurNord(Mur mur){
         murNord = mur;
+    }
+
+    public Mur getMurNord(){
+        return murNord;
     }
 }

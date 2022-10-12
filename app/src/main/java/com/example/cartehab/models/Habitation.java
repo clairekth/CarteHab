@@ -1,5 +1,9 @@
 package com.example.cartehab.models;
 
-public class Habitation {
+import java.io.Serializable;
+
+public class Habitation implements Serializable {
+
+    public Habitation(){}
 
 }

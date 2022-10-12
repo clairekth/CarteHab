@@ -1,8 +1,9 @@
 package com.example.cartehab.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GestionnairePiece {
+public class GestionnairePiece implements Serializable {
     protected ArrayList<Piece> listePieces;
     protected Habitation habitation;
 
