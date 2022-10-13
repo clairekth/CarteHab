@@ -2,10 +2,12 @@ package com.example.cartehab.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
@@ -27,6 +30,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.view.DialogCustom;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +46,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     protected float degree;
     protected ImageView wall;
     protected ConstraintLayout layout;
+    protected long lastUpdateTime = 0;
     /**
      * Champ contenant le SensorManager.
      */
@@ -139,6 +144,19 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         Intent i = getIntent();
         Habitation h = (Habitation) i.getSerializableExtra("hab");
         p = new Piece(h);
+
+        TextView roomName = findViewById(R.id.room_name);
+        DialogCustom.FullNameListener listener = new DialogCustom.FullNameListener() {
+            @Override
+            public void fullNameEntered(String fullName) {
+                p.setNom(fullName);
+                roomName.setText(p.getNom());
+            }
+        };
+        final DialogCustom dialog = new DialogCustom(this, listener);
+
+        dialog.show();
+
         listeButtonPorte = new ArrayList<>();
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
@@ -153,44 +171,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         });
 
 
-        Button afficher = (Button) findViewById(R.id.print_picture);
-        afficher.setOnClickListener(view -> {
-            /*FileInputStream fis = null;
-            try {
-                fis = openFileInput("image.png");
-                Bitmap bp = BitmapFactory.decodeStream(fis);
-                wall.setImageBitmap(bp);
-                for (Porte p : m.getListePortes()){
-                    Button b = new Button(this);
-                    ConstraintLayout layout = findViewById(R.id.layout);
-                    b.setX(p.getLeft());
-                    b.setY(p.getTop());
-                    b.setHeight(p.getBottom() - p.getTop());
-                    b.setWidth(p.getRight() - p.getLeft());
-                    b.setText("cccc");
-                    b.setBackgroundColor(Color.argb(100,50,156,123));
-                    b.setOnClickListener(viewB -> {
-                        Toast.makeText(NewRoomActivity.this,b.toString(),Toast.LENGTH_SHORT).show();
-                    });
-                    layout.addView(b);
-                }
-
-                if (degree < 45 && degree > -45){
-                    Toast.makeText(NewRoomActivity.this,"Nord",Toast.LENGTH_SHORT).show();
-                } else if (degree > 45 && degree < 135){
-                    Toast.makeText(NewRoomActivity.this,"Ouest",Toast.LENGTH_SHORT).show();
-                } else if (degree < -45 && degree > -135){
-                    Toast.makeText(NewRoomActivity.this,"Est",Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(NewRoomActivity.this,"Sud",Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
-        });
-
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -198,7 +178,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
 
-
+        //sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        //sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -210,13 +191,18 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             System.arraycopy(event.values, 0, magnetometerData, 0, magnetometerData.length);
         }
 
-        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData);
-        SensorManager.getOrientation(rotationMatrix, orientationAngles);
-        degree = (float) Math.toDegrees(-orientationAngles[0]);
-        //Log.i("COmpass", "" + d);
-        ImageView compass = findViewById(R.id.compass);
-        compass.setRotation(degree);
-        set3D();
+        if (System.currentTimeMillis() - lastUpdateTime > 50) {
+            SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData);
+            SensorManager.getOrientation(rotationMatrix, orientationAngles);
+            degree = (float) Math.toDegrees(-orientationAngles[0]);
+            //Log.i("COmpass", "" + d);
+
+            ImageView compass = findViewById(R.id.compass);
+            compass.setRotation(degree);
+            set3D();
+            lastUpdateTime = System.currentTimeMillis();
+        }
+
     }
 
     @Override
@@ -226,8 +212,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     protected void onPause(){
-        super.onPause();
         sensorManager.unregisterListener(NewRoomActivity.this);
+        super.onPause();
     }
 
     @Override
@@ -268,7 +254,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 afficherMur(p.getMurEst());
 
             } else {
-                Log.i("Mur", "Estpala");
                 wall.setImageBitmap(null);
             }
         } else if (orientation().equals("Sud")){
@@ -280,7 +265,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 afficherMur(p.getMurSud());
 
             } else {
-                Log.i("Mur", "Sudpala");
                 wall.setImageBitmap(null);
             }
         } else {
@@ -292,7 +276,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 afficherMur(p.getMurOuest());
 
             } else {
-                Log.i("Mur", "Ouestpala");
                 wall.setImageBitmap(null);
             }
         }
@@ -322,5 +305,10 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
     }
 }
