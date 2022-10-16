@@ -24,8 +24,10 @@ import android.widget.ImageView;
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
+import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.view.DialogChooseRoomNext;
+import com.example.cartehab.view.DialogNameCustom;
 
 import org.json.JSONObject;
 
@@ -75,6 +77,7 @@ public class SelectDoorActivity extends AppCompatActivity {
     protected ArrayList<Rect> listePorte;
     protected Mur m;
     protected Habitation hab;
+    protected String pieceSuivanteNom;
     /**
      * Méthode onCreate.
      * @param savedInstanceState
@@ -167,10 +170,19 @@ public class SelectDoorActivity extends AppCompatActivity {
 
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    //listePorte.add(rectangle);
-                    m.addPorte(new Porte(m, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom));
-                    DialogChooseRoomNext dialog = new DialogChooseRoomNext(SelectDoorActivity.this, hab, m);
+                    Porte p = new Porte(m, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
+                    DialogChooseRoomNext.NameRoomNextListener listener = new DialogChooseRoomNext.NameRoomNextListener() {
+                        @Override
+                        public void nameRoomNext(String fullName) {
+                            pieceSuivanteNom = fullName;
+                            Piece piece = hab.getPiece(pieceSuivanteNom);
+                            p.setPieceSuivante(piece);
+                        }
+                    };
+                    final DialogChooseRoomNext dialog = new DialogChooseRoomNext(SelectDoorActivity.this, hab,m,listener);
                     dialog.showAlertDialog();
+                    m.addPorte(p);
+                    Log.i("Mur", m.toString());
                 }
                 return true;
             }
@@ -178,10 +190,7 @@ public class SelectDoorActivity extends AppCompatActivity {
 
         Button ok = findViewById(R.id.validation_button);
         ok.setOnClickListener(view -> {
-            /*for (Rect r : listePorte){
-                m.addPorte(new Porte(m,r.left, r.top, r.right, r.bottom));
-            }*/
-            finish();
+           finish();
         });
     }
 
@@ -191,5 +200,9 @@ public class SelectDoorActivity extends AppCompatActivity {
         data.putExtra("Mur", m);
         setResult(RESULT_OK, data);
         super.finish();
+    }
+
+    public void nomPieceSuivante(String p){
+        pieceSuivanteNom = p;
     }
 }

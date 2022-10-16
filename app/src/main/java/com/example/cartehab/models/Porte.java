@@ -24,6 +24,19 @@ public class Porte implements Serializable {
         pieceSuivante = p;
     }
 
+    @Override
+    public String toString() {
+        return "Porte{" +
+                ", left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                ", mur=" + mur +
+                ", pieceActuelle=" + pieceActuelle +
+                ", pieceSuivante=" + pieceSuivante +
+                '}';
+    }
+
     public Piece getPieceSuivante(){
         return pieceSuivante;
     }

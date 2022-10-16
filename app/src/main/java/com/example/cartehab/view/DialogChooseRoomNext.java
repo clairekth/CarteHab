@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
@@ -25,11 +26,18 @@ public class DialogChooseRoomNext{
     protected Activity activity;
     protected Habitation habitation;
     protected Mur mur;
+    protected static String nomPiece;
+    protected NameRoomNextListener listener;
 
-    public DialogChooseRoomNext(Activity a, Habitation hab, Mur m) {
+    public interface NameRoomNextListener {
+        void nameRoomNext(String fullName);
+    }
+
+    public DialogChooseRoomNext(Activity a, Habitation hab, Mur m, DialogChooseRoomNext.NameRoomNextListener lis) {
         activity = a;
         habitation = hab;
         mur = m;
+        listener = lis;
     }
 
     public void showAlertDialog()  {
@@ -62,7 +70,7 @@ public class DialogChooseRoomNext{
         });
 
         //
-        builder.setCancelable(true);
+        builder.setCancelable(false);
 
         // Create "Yes" button with OnClickListener.
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -71,29 +79,18 @@ public class DialogChooseRoomNext{
                     return;
                 }
                 String piece = selectedItems.iterator().next();
-
-                // Close Dialog
                 dialog.dismiss();
-                // Do something, for example: Call a method of Activity...
-                Toast.makeText(activity,"You select " + piece,
-                        Toast.LENGTH_SHORT).show();
+
+                if (listener != null){
+                    listener.nameRoomNext(piece);
+                }
 
             }
         });
 
-        // Create "Cancel" button with OnClickListener.
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(activity,"You choose Cancel button",
-                        Toast.LENGTH_SHORT).show();
-                //  Cancel
-                dialog.cancel();
-            }
-        });
-
-        // Create AlertDialog:
         AlertDialog alert = builder.create();
         alert.show();
     }
+
 
 }

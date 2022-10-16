@@ -294,14 +294,20 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
+                Log.i("Porte", "NewRoom : " + p.toString());
+
                 if (p.getPieceSuivante() == null){
-                    b.setText("Pièce suivante non créé.");
+                    b.setText("Pièce suivante non créée.");
                 } else {
                     b.setText(p.getPieceSuivante().getNom());
                 }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
                 b.setOnClickListener(viewB -> {
-                    Toast.makeText(NewRoomActivity.this,b.toString(),Toast.LENGTH_SHORT).show();
+                    if (p.getPieceSuivante() != null) {
+                        Toast.makeText(NewRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(NewRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
+                    }
                 });
                 listeButtonPorte.add(b);
                 layout.addView(b);

@@ -23,12 +23,18 @@ public class Mur implements Serializable {
         listePortes.add(p);
     }
 
-    public Piece getPiece(){
-        return piece;
+    @Override
+    public String toString() {
+        return "Mur{" +
+                "id='" + id + '\'' +
+                ", piece=" + piece +
+                ", orientation='" + orientation + '\'' +
+                ", listePortes" + listePortes.size() +
+                '}';
     }
 
-    public String toString(){
-        return orientation + listePortes.size();
+    public Piece getPiece(){
+        return piece;
     }
 
     public ArrayList<Porte> getListePortes(){
