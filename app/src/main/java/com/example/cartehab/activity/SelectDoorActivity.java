@@ -182,7 +182,6 @@ public class SelectDoorActivity extends AppCompatActivity {
                     final DialogChooseRoomNext dialog = new DialogChooseRoomNext(SelectDoorActivity.this, hab,m,listener);
                     dialog.showAlertDialog();
                     m.addPorte(p);
-                    Log.i("Mur", m.toString());
                 }
                 return true;
             }

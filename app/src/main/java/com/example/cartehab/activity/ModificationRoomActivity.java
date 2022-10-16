@@ -28,7 +28,8 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
-import com.example.cartehab.view.DialogNameCustom;
+import com.example.cartehab.view.DialogChooseRoomModification;
+import com.example.cartehab.view.DialogChooseRoomNext;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,19 +37,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class NewRoomActivity extends AppCompatActivity implements SensorEventListener {
-    protected Piece p;
+public class ModificationRoomActivity extends AppCompatActivity implements SensorEventListener {
+    protected Habitation hab;
+    protected Piece piece;
     protected Mur m;
-    protected Habitation h;
     protected ArrayList<Button> listeButtonPorte;
     protected float degree;
     protected ImageView wall;
     protected ConstraintLayout layout;
     protected long lastUpdateTime = 0;
-    /**
-     * Champ contenant le SensorManager.
-     */
     protected SensorManager sensorManager;
+    protected TextView roomName;
+    private boolean dialogDismiss;
 
 
     /**
@@ -81,12 +81,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
      */
     private final float[] orientationAngles = new float[3];
 
-
     final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     m = (Mur) result.getData().getSerializableExtra("Mur");
-                    p.setMur(m);
+                    piece.setMur(m);
                 }
             });
 
@@ -105,25 +104,25 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                     try {
                         FileOutputStream fos = null;
                         if (orientation().equals("Nord")){
-                            m = new Mur(p, "N",p.getNom()+"MUR_NORD" );
-                            fos = openFileOutput(p.getNom()+"MUR_NORD", MODE_PRIVATE);
+                            m = new Mur(piece, "N",piece.getNom()+"MUR_NORD" );
+                            fos = openFileOutput(piece.getNom()+"MUR_NORD", MODE_PRIVATE);
                         } else if (orientation().equals("Sud")){
-                            m = new Mur(p, "S",p.getNom()+"MUR_SUD" );
-                            fos = openFileOutput(p.getNom()+"MUR_SUD", MODE_PRIVATE);
+                            m = new Mur(piece, "S",piece.getNom()+"MUR_SUD" );
+                            fos = openFileOutput(piece.getNom()+"MUR_SUD", MODE_PRIVATE);
                         } else if (orientation().equals("Est")){
-                            m = new Mur(p, "E",p.getNom()+"MUR_EST" );
-                            fos = openFileOutput(p.getNom()+"MUR_EST", MODE_PRIVATE);
+                            m = new Mur(piece, "E",piece.getNom()+"MUR_EST" );
+                            fos = openFileOutput(piece.getNom()+"MUR_EST", MODE_PRIVATE);
                         } else {
-                            m = new Mur(p, "O",p.getNom()+"MUR_OUEST" );
-                            fos = openFileOutput(p.getNom()+"MUR_OUEST", MODE_PRIVATE);
+                            m = new Mur(piece, "O",piece.getNom()+"MUR_OUEST" );
+                            fos = openFileOutput(piece.getNom()+"MUR_OUEST", MODE_PRIVATE);
                         }
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
 
-                        Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
+                        Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                         intent.putExtra("Mur",m);
-                        intent.putExtra("Hab", h);
+                        intent.putExtra("Hab", hab);
                         launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
@@ -133,30 +132,39 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             });
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_room);
-        Intent i = getIntent();
-        h = (Habitation) i.getSerializableExtra("hab");
-        p = new Piece(h);
+        setContentView(R.layout.activity_modification_room);
+        Intent i= getIntent();
+        hab = (Habitation) i.getSerializableExtra("hab");
 
-        TextView roomName = findViewById(R.id.room_name);
-        DialogNameCustom.FullNameListener listener = new DialogNameCustom.FullNameListener() {
-            @Override
-            public void fullNameEntered(String fullName) {
-                p.setNom(fullName);
-                roomName.setText(p.getNom());
-            }
-        };
-        final DialogNameCustom dialog = new DialogNameCustom(this, listener);
-
-        dialog.show();
-
+        roomName = findViewById(R.id.room_name);
         listeButtonPorte = new ArrayList<>();
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
+
+        dialogDismiss = false;
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
+
+        DialogChooseRoomModification.NameRoomToModifyListener listener = new DialogChooseRoomModification.NameRoomToModifyListener() {
+            @Override
+            public void nameRoomToModify(String fullName) {
+                setPiece(fullName);
+                roomName.setText(fullName);
+                dialogDismiss = true;
+            }
+        };
+        final DialogChooseRoomModification dialog = new DialogChooseRoomModification(ModificationRoomActivity.this, hab,listener);
+        dialog.showAlertDialog();
+
+
 
         Button prendrePhoto = (Button) findViewById(R.id.take_picture);
         prendrePhoto.setOnClickListener(view -> {
@@ -167,16 +175,14 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
         });
 
+    }
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    private void setPiece(String name){
+        piece = hab.getPiece(name);
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-        sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
-
-        //sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        //sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -196,22 +202,19 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
-            set3D();
+            if (dialogDismiss){
+                set3D();
+            }
             lastUpdateTime = System.currentTimeMillis();
         }
 
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
     protected void onPause(){
-        sensorManager.unregisterListener(NewRoomActivity.this);
+        sensorManager.unregisterListener(ModificationRoomActivity.this);
         Intent data = new Intent();
-        data.putExtra("Piece", p);
+        data.putExtra("Piece", piece);
         setResult(RESULT_OK, data);
         super.onPause();
     }
@@ -219,8 +222,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     protected void onResume(){
         super.onResume();
-        sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public String orientation(){
@@ -241,8 +244,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             }
             listeButtonPorte.clear();
 
-            if (p.getMurNord() != null){
-                afficherMur(p.getMurNord());
+            if (piece.getMurNord() != null){
+                afficherMur(piece.getMurNord());
             }
         } else if (orientation().equals("Est")){
             for (Button b : listeButtonPorte){
@@ -250,8 +253,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             }
             listeButtonPorte.clear();
 
-            if (p.getMurEst() != null){
-                afficherMur(p.getMurEst());
+            if (piece.getMurEst() != null){
+                afficherMur(piece.getMurEst());
 
             } else {
                 wall.setImageBitmap(null);
@@ -261,8 +264,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
-            if (p.getMurSud() != null){
-                afficherMur(p.getMurSud());
+            if (piece.getMurSud() != null){
+                afficherMur(piece.getMurSud());
 
             } else {
                 wall.setImageBitmap(null);
@@ -272,8 +275,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
-            if (p.getMurOuest() != null){
-                afficherMur(p.getMurOuest());
+            if (piece.getMurOuest() != null){
+                afficherMur(piece.getMurOuest());
 
             } else {
                 wall.setImageBitmap(null);
@@ -303,9 +306,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 b.setBackgroundColor(Color.argb(60,50,156,123));
                 b.setOnClickListener(viewB -> {
                     if (p.getPieceSuivante() != null) {
-                        Toast.makeText(NewRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ModificationRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(NewRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ModificationRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
                     }
                 });
                 listeButtonPorte.add(b);
@@ -320,8 +323,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     public void finish() {
         Intent data = new Intent();
-        data.putExtra("Piece", p);
+        data.putExtra("Piece", piece);
         setResult(RESULT_OK, data);
         super.finish();
     }
+
 }

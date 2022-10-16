@@ -1,5 +1,6 @@
 package com.example.cartehab.models;
 
+import android.os.Build;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -17,6 +18,9 @@ public class Habitation implements Serializable {
         listePieces.put(p.getNom(), p);
     }
 
+    public void remove(Piece piece){
+        listePieces.remove(piece);
+    }
 
     public Piece getPiece(String nom){
         if (nom.equals("Pièce non créée")){
