@@ -23,7 +23,6 @@ public class ConstructionActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Piece p = (Piece) result.getData().getSerializableExtra("Piece");
                     hab.addPiece(p);
-                    Log.i("Hab", hab.toString());
                 }
             });
 

@@ -16,6 +16,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
+    <Button
+        android:id="@+id/modification_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modifier mur"
+        app:layout_constraintLeft_toRightOf="@id/take_picture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <TextView
         android:id="@+id/room_name"

@@ -12,9 +12,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Prendre une photo"
+        android:layout_marginLeft="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/modification_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modifier mur"
+        app:layout_constraintLeft_toRightOf="@id/take_picture"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <TextView

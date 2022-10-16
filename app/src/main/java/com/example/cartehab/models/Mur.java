@@ -49,4 +49,8 @@ public class Mur implements Serializable {
         return orientation;
     }
 
+    public void deletePortes(){
+        listePortes.clear();
+    }
+
 }

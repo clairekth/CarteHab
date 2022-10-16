@@ -175,6 +175,28 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
         });
 
+        Button modification = (Button) findViewById(R.id.modification_button);
+        modification.setOnClickListener(view -> {
+            if (orientation().equals("Nord")){
+                m = piece.getMurNord();
+            } else if (orientation().equals("Sud")){
+                m = piece.getMurSud();
+            } else if (orientation().equals("Est")){
+                m = piece.getMurEst();
+            } else {
+                m = piece.getMurOuest();
+            }
+
+            if (m == null) {
+                Toast.makeText(ModificationRoomActivity.this, "Impossible de modifier. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
+                intent.putExtra("Mur",m);
+                intent.putExtra("Hab", hab);
+                launcherSelectDoor.launch(intent);
+            }
+        });
+
     }
 
     private void setPiece(String name){

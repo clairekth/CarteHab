@@ -92,7 +92,10 @@ public class SelectDoorActivity extends AppCompatActivity {
         hab = (Habitation) i.getSerializableExtra("Hab");
 
         ImageView image = findViewById(R.id.im_selectActivity);
+        Button delete = (Button) findViewById(R.id.delete_button);
+
         listePorte = new ArrayList<>();
+        m.deletePortes();
 
         FileInputStream fis = null;
         try {
@@ -107,6 +110,11 @@ public class SelectDoorActivity extends AppCompatActivity {
         holder = surface.getHolder();
         holder.setFormat(PixelFormat.TRANSPARENT);
         surface.setZOrderOnTop(true);
+
+        Paint myPaint = new Paint();
+        myPaint.setColor(Color.BLUE);
+        myPaint.setStyle(Paint.Style.FILL);
+        myPaint.setAlpha(70);
 
         canvas = new Canvas();
 
@@ -155,11 +163,6 @@ public class SelectDoorActivity extends AppCompatActivity {
                         rectangle = new Rect(left, top, right, bottom);
                         rectangle.sort();
 
-                        Paint myPaint = new Paint();
-                        myPaint.setColor(Color.BLUE);
-                        myPaint.setStyle(Paint.Style.FILL);
-                        myPaint.setAlpha(70);
-
                         canvas = holder.lockCanvas();
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //Clear les anciens rectangle
                         canvas.drawRect(rectangle, myPaint);
@@ -171,6 +174,8 @@ public class SelectDoorActivity extends AppCompatActivity {
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
                     Porte p = new Porte(m, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
+                    listePorte.add(rectangle);
+
                     DialogChooseRoomNext.NameRoomNextListener listener = new DialogChooseRoomNext.NameRoomNextListener() {
                         @Override
                         public void nameRoomNext(String fullName) {
@@ -191,6 +196,14 @@ public class SelectDoorActivity extends AppCompatActivity {
         ok.setOnClickListener(view -> {
            finish();
         });
+
+        delete.setOnClickListener( view -> {
+            listePorte.clear();
+            m.deletePortes();
+            canvas = holder.lockCanvas();
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //Clear les anciens rectangle
+            holder.unlockCanvasAndPost(canvas);
+        });
     }
 
     @Override
@@ -199,9 +212,5 @@ public class SelectDoorActivity extends AppCompatActivity {
         data.putExtra("Mur", m);
         setResult(RESULT_OK, data);
         super.finish();
-    }
-
-    public void nomPieceSuivante(String p){
-        pieceSuivanteNom = p;
     }
 }

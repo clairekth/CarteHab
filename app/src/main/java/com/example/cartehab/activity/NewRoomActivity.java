@@ -164,7 +164,28 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             if (intent.resolveActivity(getPackageManager())!=null) {
                 launcher.launch(intent);
             }
+        });
 
+        Button modification = (Button) findViewById(R.id.modification_button);
+        modification.setOnClickListener(view -> {
+            if (orientation().equals("Nord")){
+                m = p.getMurNord();
+            } else if (orientation().equals("Sud")){
+                m = p.getMurSud();
+            } else if (orientation().equals("Est")){
+                m = p.getMurEst();
+            } else {
+                m = p.getMurOuest();
+            }
+
+            if (m == null) {
+                Toast.makeText(NewRoomActivity.this, "Impossible de modifier. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
+                intent.putExtra("Mur",m);
+                intent.putExtra("Hab", h);
+                launcherSelectDoor.launch(intent);
+            }
         });
 
 
