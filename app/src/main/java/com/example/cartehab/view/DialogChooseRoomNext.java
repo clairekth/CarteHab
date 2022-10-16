@@ -26,7 +26,6 @@ public class DialogChooseRoomNext{
     protected Activity activity;
     protected Habitation habitation;
     protected Mur mur;
-    protected static String nomPiece;
     protected NameRoomNextListener listener;
 
     public interface NameRoomNextListener {
@@ -46,9 +45,9 @@ public class DialogChooseRoomNext{
         builder.setTitle("Selectionné la pièce suivante");
         final String[] pieces = new String[habitation.getListePieces().size() + 1];
         int i =0;
-        for (Piece p : habitation.getListePieces()){
-            if (! p.getNom().equals(mur.getPiece().getNom())){
-                pieces[i] = p.getNom();
+        for (String p : habitation.getListePieces().keySet()){
+            if (! p.equals(mur.getPiece().getNom())){
+                pieces[i] = p;
                 i++;
             }
         }

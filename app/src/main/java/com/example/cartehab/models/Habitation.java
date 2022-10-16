@@ -4,38 +4,30 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Habitation implements Serializable {
-    protected ArrayList<Piece> listePieces;
+    protected HashMap<String, Piece> listePieces;
 
     public Habitation(){
-        listePieces = new ArrayList<>();
+        listePieces = new HashMap<>();
     }
 
     public void addPiece(Piece p){
-        listePieces.add(p);
+        listePieces.put(p.getNom(), p);
     }
 
-    public ArrayList<Piece> getListePieces(){
-        return listePieces;
-    }
 
     public Piece getPiece(String nom){
-        Log.i("Hab", "__________");
-        for (Piece p : listePieces){
-            Log.i("Hab", p.getNom() + " - " + nom);
-            if (p.getNom().equals(nom)){
-                Log.i("Hab", "OUI");
-                return p;
-            } else {
-                Log.i("Hab", "NON");
-
-            }
+        if (nom.equals("Pièce non créée")){
+            return null;
         }
-
-        return null;
+        return listePieces.get(nom);
     }
 
+    public HashMap<String, Piece> getListePieces(){
+        return listePieces;
+    }
     @Override
     public String toString() {
         return "Habitation{" +
