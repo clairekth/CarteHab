@@ -2,16 +2,14 @@ package com.example.cartehab.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -30,9 +28,8 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
-import com.example.cartehab.view.DialogCustom;
+import com.example.cartehab.view.DialogNameCustom;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +39,7 @@ import java.util.ArrayList;
 public class NewRoomActivity extends AppCompatActivity implements SensorEventListener {
     protected Piece p;
     protected Mur m;
+    protected Habitation h;
     protected ArrayList<Button> listeButtonPorte;
     protected float degree;
     protected ImageView wall;
@@ -84,6 +82,16 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     private final float[] orientationAngles = new float[3];
 
 
+    final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    m = (Mur) result.getData().getSerializableExtra("Mur");
+                    p.setMur(m);
+                    Log.i("Mur", m.toString());
+                }
+            });
+
+
     /**
      * Champ du launcher de résultat pour l'activité lorsque l'on a pris une photo.
      */
@@ -116,7 +124,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
                         Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
                         intent.putExtra("Mur",m);
-                        startActivityForResult(intent,0);
+                        intent.putExtra("Hab", h);
+                        launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -124,36 +133,25 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 }
             });
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == 0) {
-            m = (Mur) data.getSerializableExtra("Mur");
-            p.setMur(m);
-
-
-            Log.i("Mur", m.toString());
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_room);
         Intent i = getIntent();
-        Habitation h = (Habitation) i.getSerializableExtra("hab");
+        h = (Habitation) i.getSerializableExtra("hab");
         p = new Piece(h);
 
         TextView roomName = findViewById(R.id.room_name);
-        DialogCustom.FullNameListener listener = new DialogCustom.FullNameListener() {
+        DialogNameCustom.FullNameListener listener = new DialogNameCustom.FullNameListener() {
             @Override
             public void fullNameEntered(String fullName) {
                 p.setNom(fullName);
                 roomName.setText(p.getNom());
             }
         };
-        final DialogCustom dialog = new DialogCustom(this, listener);
+        final DialogNameCustom dialog = new DialogNameCustom(this, listener);
 
         dialog.show();
 
@@ -213,6 +211,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     protected void onPause(){
         sensorManager.unregisterListener(NewRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Piece", p);
+        setResult(RESULT_OK, data);
         super.onPause();
     }
 
@@ -293,7 +294,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
-                b.setText("cccc");
+                if (p.getPieceSuivante() == null){
+                    b.setText("Pièce suivante non créé.");
+                } else {
+                    b.setText(p.getPieceSuivante().getNom());
+                }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
                 b.setOnClickListener(viewB -> {
                     Toast.makeText(NewRoomActivity.this,b.toString(),Toast.LENGTH_SHORT).show();
@@ -308,7 +313,10 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     }
 
     @Override
-    public void finish(){
+    public void finish() {
+        Intent data = new Intent();
+        data.putExtra("Piece", p);
+        setResult(RESULT_OK, data);
         super.finish();
     }
 }

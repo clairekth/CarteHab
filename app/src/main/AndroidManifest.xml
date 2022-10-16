@@ -25,6 +25,13 @@
         android:theme="@style/Theme.CarteHab"
         tools:targetApi="31">
         <activity
+            android:name=".DialogChooseRoomNext"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".DialogCustom"
             android:exported="false">
             <meta-data

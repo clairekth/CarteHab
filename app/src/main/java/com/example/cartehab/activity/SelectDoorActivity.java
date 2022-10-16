@@ -22,8 +22,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.cartehab.R;
+import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.view.DialogChooseRoomNext;
 
 import org.json.JSONObject;
 
@@ -72,6 +74,7 @@ public class SelectDoorActivity extends AppCompatActivity {
 
     protected ArrayList<Rect> listePorte;
     protected Mur m;
+    protected Habitation hab;
     /**
      * Méthode onCreate.
      * @param savedInstanceState
@@ -83,6 +86,8 @@ public class SelectDoorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_door);
         Intent i= getIntent();
         m = (Mur) i.getSerializableExtra("Mur");
+        hab = (Habitation) i.getSerializableExtra("Hab");
+
         ImageView image = findViewById(R.id.im_selectActivity);
         listePorte = new ArrayList<>();
 
@@ -162,8 +167,10 @@ public class SelectDoorActivity extends AppCompatActivity {
 
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    listePorte.add(rectangle);
-
+                    //listePorte.add(rectangle);
+                    m.addPorte(new Porte(m, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom));
+                    DialogChooseRoomNext dialog = new DialogChooseRoomNext(SelectDoorActivity.this, hab, m);
+                    dialog.showAlertDialog();
                 }
                 return true;
             }
@@ -171,9 +178,9 @@ public class SelectDoorActivity extends AppCompatActivity {
 
         Button ok = findViewById(R.id.validation_button);
         ok.setOnClickListener(view -> {
-            for (Rect r : listePorte){
+            /*for (Rect r : listePorte){
                 m.addPorte(new Porte(m,r.left, r.top, r.right, r.bottom));
-            }
+            }*/
             finish();
         });
     }

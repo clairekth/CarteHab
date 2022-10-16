@@ -23,6 +23,10 @@ public class Mur implements Serializable {
         listePortes.add(p);
     }
 
+    public Piece getPiece(){
+        return piece;
+    }
+
     public String toString(){
         return orientation + listePortes.size();
     }

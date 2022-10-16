@@ -1,8 +1,6 @@
 package com.example.cartehab.view;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.cartehab.R;
 
-public class DialogCustom extends Dialog {
+public class DialogNameCustom extends Dialog {
 
     public interface FullNameListener {
         void fullNameEntered(String fullName);
@@ -22,9 +20,9 @@ public class DialogCustom extends Dialog {
     protected EditText textInput;
     protected Button buttonOk;
     protected Context context;
-    protected DialogCustom.FullNameListener listener;
+    protected DialogNameCustom.FullNameListener listener;
 
-    public DialogCustom(@NonNull Context context, DialogCustom.FullNameListener listener) {
+    public DialogNameCustom(@NonNull Context context, DialogNameCustom.FullNameListener listener) {
         super(context);
         this.context = context;
         this.listener = listener;
@@ -33,7 +31,7 @@ public class DialogCustom extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dialog_custom);
+        setContentView(R.layout.activity_dialog_name_custom);
         textInput = findViewById(R.id.text_input);
         buttonOk = findViewById(R.id.ok_button);
         buttonOk.setOnClickListener(view -> {

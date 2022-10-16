@@ -8,8 +8,8 @@ public class Porte implements Serializable {
     protected String id;
     protected int left, top, right, bottom;
     protected Mur mur;
-    protected Piece piece1;
-    protected Piece piece2;
+    protected Piece pieceActuelle;
+    protected Piece pieceSuivante;
 
     public Porte(Mur m, int l, int t, int r, int b){
         mur = m;
@@ -17,8 +17,16 @@ public class Porte implements Serializable {
         top = t;
         right = r;
         bottom = b;
+        pieceActuelle = m.getPiece();
     }
 
+    public void setPieceSuivante(Piece p){
+        pieceSuivante = p;
+    }
+
+    public Piece getPieceSuivante(){
+        return pieceSuivante;
+    }
     public String getId() {
         return id;
     }
