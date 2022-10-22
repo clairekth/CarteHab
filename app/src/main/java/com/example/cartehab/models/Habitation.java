@@ -19,7 +19,7 @@ public class Habitation implements Serializable {
     }
 
     public void addPiece(Piece p){
-        listePieces.put(p.getNom(), p);
+        listePieces.put(p.getId(), p);
     }
 
     public void remove(Piece piece){

@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import java.io.Serializable;
 
 public class Porte implements Serializable {
-    protected String id;
     protected int left, top, right, bottom;
     protected Mur mur;
     protected Piece pieceActuelle;
@@ -40,9 +39,7 @@ public class Porte implements Serializable {
     public Piece getPieceSuivante(){
         return pieceSuivante;
     }
-    public String getId() {
-        return id;
-    }
+
 
     public int getLeft() {
         return left;
@@ -62,5 +59,9 @@ public class Porte implements Serializable {
 
     public Mur getMur() {
         return mur;
+    }
+
+    public Piece getPieceActuelle(){
+        return pieceActuelle;
     }
 }

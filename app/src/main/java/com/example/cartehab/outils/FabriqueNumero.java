@@ -18,13 +18,13 @@ public class FabriqueNumero {
 
     public int getNumeroHabitation() {
         cptHabitation++;
-        return cptHabitation - 1;
+        return cptHabitation ;
     }
 
 
     public int getNumeroPiece() {
         cptPiece++;
-        return cptPiece -1 ;
+        return cptPiece ;
     }
 
     public void resetCompteurPiece(){
