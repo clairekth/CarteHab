@@ -1,5 +1,7 @@
 package com.example.cartehab.models;
 
+import com.example.cartehab.outils.FabriqueNumero;
+
 import java.io.Serializable;
 
 public class Piece implements Serializable {
@@ -13,6 +15,11 @@ public class Piece implements Serializable {
 
     public Piece(Habitation h){
         habitation = h;
+        id = h.getId() + "PI" + FabriqueNumero.getInstance().getNumeroPiece();
+    }
+
+    public String getId(){
+        return id;
     }
 
     public void setMur(Mur mur){

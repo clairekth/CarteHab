@@ -105,17 +105,17 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                     try {
                         FileOutputStream fos = null;
                         if (orientation().equals("Nord")){
-                            m = new Mur(p, "N",p.getNom()+"MUR_NORD" );
-                            fos = openFileOutput(p.getNom()+"MUR_NORD", MODE_PRIVATE);
+                            m = new Mur(p, "N",p.getId()+"MUR_NORD" );
+                            fos = openFileOutput(p.getId()+"MUR_NORD", MODE_PRIVATE);
                         } else if (orientation().equals("Sud")){
-                            m = new Mur(p, "S",p.getNom()+"MUR_SUD" );
-                            fos = openFileOutput(p.getNom()+"MUR_SUD", MODE_PRIVATE);
+                            m = new Mur(p, "S",p.getId()+"MUR_SUD" );
+                            fos = openFileOutput(p.getId()+"MUR_SUD", MODE_PRIVATE);
                         } else if (orientation().equals("Est")){
-                            m = new Mur(p, "E",p.getNom()+"MUR_EST" );
-                            fos = openFileOutput(p.getNom()+"MUR_EST", MODE_PRIVATE);
+                            m = new Mur(p, "E",p.getId()+"MUR_EST" );
+                            fos = openFileOutput(p.getId()+"MUR_EST", MODE_PRIVATE);
                         } else {
-                            m = new Mur(p, "O",p.getNom()+"MUR_OUEST" );
-                            fos = openFileOutput(p.getNom()+"MUR_OUEST", MODE_PRIVATE);
+                            m = new Mur(p, "O",p.getId()+"MUR_OUEST" );
+                            fos = openFileOutput(p.getId()+"MUR_OUEST", MODE_PRIVATE);
                         }
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
@@ -226,6 +226,16 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        sensorManager.unregisterListener(NewRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Piece", p);
+        setResult(RESULT_OK, data);
+        finish();
+        super.onBackPressed();
     }
 
     @Override
