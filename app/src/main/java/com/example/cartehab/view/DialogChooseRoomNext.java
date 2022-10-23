@@ -42,7 +42,7 @@ public class DialogChooseRoomNext{
     public void showAlertDialog()  {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
 
-        builder.setTitle("Selectionné la pièce suivante");
+        builder.setTitle("Selectionner la pièce suivante");
         final String[] pieces = new String[habitation.getListePieces().size() + 1];
         int i =0;
         for (String p : habitation.getListePieces().keySet()){
@@ -52,8 +52,7 @@ public class DialogChooseRoomNext{
             }
         }
         pieces[i] = "Pièce non créée";
-        // Add a list
-       // final String[] animals = {"Horse", "Cow", "Camel", "Sheep", "Goat"};
+
 
         int checkedItem = i; // Sheep
         final Set<String> selectedItems = new HashSet<String>();
@@ -68,10 +67,9 @@ public class DialogChooseRoomNext{
             }
         });
 
-        //
+
         builder.setCancelable(false);
 
-        // Create "Yes" button with OnClickListener.
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(selectedItems.isEmpty()) {

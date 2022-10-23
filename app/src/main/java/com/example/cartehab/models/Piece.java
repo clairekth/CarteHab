@@ -18,6 +18,12 @@ public class Piece implements Serializable {
         id = h.getId() + "PI" + FabriqueNumero.getInstance().getNumeroPiece();
     }
 
+    public Piece(Habitation h, String name, String i){
+        habitation = h;
+        nom = name;
+        id = i;
+    }
+
     public String getId(){
         return id;
     }

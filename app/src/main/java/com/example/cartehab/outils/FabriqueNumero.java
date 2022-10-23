@@ -30,4 +30,16 @@ public class FabriqueNumero {
     public void resetCompteurPiece(){
         cptPiece = 0;
     }
+
+    public int getNumeroHabitationSansIncre(){
+        return cptHabitation;
+    }
+
+    public void setCptHabitation(int i ){
+        cptHabitation = i;
+    }
+
+    public void setCptPiece(int i ){
+        cptPiece = i;
+    }
 }

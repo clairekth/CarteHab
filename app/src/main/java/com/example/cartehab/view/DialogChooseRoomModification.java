@@ -16,6 +16,7 @@ public class DialogChooseRoomModification extends Dialog {
     protected Habitation habitation;
     protected NameRoomToModifyListener listener;
     protected Context context;
+
     public interface NameRoomToModifyListener {
         void nameRoomToModify(String fullName);
     }
@@ -30,7 +31,7 @@ public class DialogChooseRoomModification extends Dialog {
     public void showAlertDialog()  {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
 
-        builder.setTitle("Selectionné la pièce suivante");
+        builder.setTitle("Selectionner la pièce suivante");
         final String[] pieces = new String[habitation.getListePieces().size()];
         int i =0;
         for (String p : habitation.getListePieces().keySet()){
@@ -40,7 +41,7 @@ public class DialogChooseRoomModification extends Dialog {
         }
 
 
-        int checkedItem = 0; // Sheep
+        int checkedItem = 0;
         final Set<String> selectedItems = new HashSet<String>();
         selectedItems.add(pieces[checkedItem]);
 
@@ -53,10 +54,9 @@ public class DialogChooseRoomModification extends Dialog {
             }
         });
 
-        //
+
         builder.setCancelable(false);
 
-        // Create "Yes" button with OnClickListener.
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(selectedItems.isEmpty()) {
@@ -68,7 +68,6 @@ public class DialogChooseRoomModification extends Dialog {
                 if (listener != null){
                     listener.nameRoomToModify(piece);
                 }
-
             }
         });
 

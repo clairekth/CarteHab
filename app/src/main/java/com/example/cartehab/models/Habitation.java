@@ -12,14 +12,19 @@ import java.util.HashMap;
 public class Habitation implements Serializable {
     protected String id;
     protected HashMap<String, Piece> listePieces;
+    protected String name;
 
     public Habitation(){
         listePieces = new HashMap<>();
         id = "HAB" + FabriqueNumero.getInstance().getNumeroHabitation();
     }
 
+    public Habitation(String id){
+        listePieces = new HashMap<>();
+        this.id = id;
+    }
     public void addPiece(Piece p){
-        listePieces.put(p.getId(), p);
+        listePieces.put(p.getNom(), p);
     }
 
     public void remove(Piece piece){
@@ -41,6 +46,7 @@ public class Habitation implements Serializable {
     @Override
     public String toString() {
         return "Habitation{" +
+                "id=" + id +
                 "listePieces=" + listePieces +
                 '}';
     }

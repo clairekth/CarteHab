@@ -164,8 +164,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         final DialogChooseRoomModification dialog = new DialogChooseRoomModification(ModificationRoomActivity.this, hab,listener);
         dialog.showAlertDialog();
 
-
-
         Button prendrePhoto = (Button) findViewById(R.id.take_picture);
         prendrePhoto.setOnClickListener(view -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -202,6 +200,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     private void setPiece(String name){
         piece = hab.getPiece(name);
     }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
