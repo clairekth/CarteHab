@@ -6,6 +6,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 
@@ -16,6 +20,7 @@ public class DialogChooseRoomModification extends Dialog {
     protected Habitation habitation;
     protected NameRoomToModifyListener listener;
     protected Context context;
+    protected Dialog dialog;
 
     public interface NameRoomToModifyListener {
         void nameRoomToModify(String fullName);
@@ -26,10 +31,18 @@ public class DialogChooseRoomModification extends Dialog {
         habitation = hab;
         listener = lis;
         context = c;
+
+        setContentView(R.layout.dialog_recycler_view);
+        /*RecyclerView recyclerRoom = (RecyclerView) findViewById(R.id.recycler_view);
+        AdapterListRoom adapter = new AdapterListRoom(habitation.hashmapToList());
+        recyclerRoom.setAdapter(adapter);
+        recyclerRoom.setLayoutManager(new LinearLayoutManager(c));*/
+
+        dialog = new Dialog(c);
     }
 
     public void showAlertDialog()  {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
 
         builder.setTitle("Selectionner la pièce suivante");
         final String[] pieces = new String[habitation.getListePieces().size()];
@@ -37,7 +50,6 @@ public class DialogChooseRoomModification extends Dialog {
         for (String p : habitation.getListePieces().keySet()){
             pieces[i] = p;
             i++;
-
         }
 
 
@@ -48,7 +60,6 @@ public class DialogChooseRoomModification extends Dialog {
         builder.setSingleChoiceItems(pieces, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Do Something...
                 selectedItems.clear();
                 selectedItems.add(pieces[which]);
             }
@@ -72,7 +83,8 @@ public class DialogChooseRoomModification extends Dialog {
         });
 
         AlertDialog alert = builder.create();
-        alert.show();
+        alert.show();*/
+        dialog.show();
     }
 
 

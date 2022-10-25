@@ -50,4 +50,12 @@ public class Habitation implements Serializable {
                 "listePieces=" + listePieces +
                 '}';
     }
+
+    public ArrayList<Piece> hashmapToList(){
+        ArrayList<Piece> pieces = new ArrayList<>();
+        for (Piece p : listePieces.values()){
+            pieces.add(p);
+        }
+        return pieces;
+    }
 }

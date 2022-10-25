@@ -2,11 +2,16 @@ package com.example.cartehab.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +23,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +35,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.view.AdapterListRoom;
 import com.example.cartehab.view.DialogChooseRoomModification;
 import com.example.cartehab.view.DialogChooseRoomNext;
 
@@ -153,7 +161,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
 
-        DialogChooseRoomModification.NameRoomToModifyListener listener = new DialogChooseRoomModification.NameRoomToModifyListener() {
+        /*DialogChooseRoomModification.NameRoomToModifyListener listener = new DialogChooseRoomModification.NameRoomToModifyListener() {
             @Override
             public void nameRoomToModify(String fullName) {
                 setPiece(fullName);
@@ -162,7 +170,30 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             }
         };
         final DialogChooseRoomModification dialog = new DialogChooseRoomModification(ModificationRoomActivity.this, hab,listener);
-        dialog.showAlertDialog();
+        dialog.showAlertDialog();*/
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.hashmapToList());
+        alert.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        alert.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Piece p = adapter.getListePieces(which);
+                setPiece(p);
+            }
+        });
+
+        alert.setNegativeButton("Annuler", (dialog, which) -> {
+            dialog.cancel();
+            finish();
+        });
+        alert.show();
+
 
         Button prendrePhoto = (Button) findViewById(R.id.take_picture);
         prendrePhoto.setOnClickListener(view -> {
@@ -197,8 +228,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     }
 
-    private void setPiece(String name){
-        piece = hab.getPiece(name);
+    private void setPiece(Piece p){
+        piece = p;
     }
 
     @Override
@@ -344,8 +375,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     public void finish() {
         Intent data = new Intent();
-        data.putExtra("Piece", piece);
-        setResult(RESULT_OK, data);
+        if (piece != null) {
+            data.putExtra("Piece", piece);
+            setResult(RESULT_OK, data);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
         super.finish();
     }
 

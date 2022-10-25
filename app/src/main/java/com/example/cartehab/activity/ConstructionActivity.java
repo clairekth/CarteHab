@@ -64,14 +64,17 @@ public class ConstructionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_construction);
-        listeHabitation = new HashMap<>();
+        hab = new Habitation();
+
+        /*listeHabitation = new HashMap<>();
         String idLastHab = openListeHabitation();
         if (idLastHab == null ){
             hab = new Habitation();
             listeHabitation.put(hab.getId(),"hab");
         } else {
             open(idLastHab);
-        }
+            FabriqueNumero.getInstance().setCptPiece(hab.getListePieces().size());
+        }*/
 
         Button newRoom = (Button) findViewById(R.id.new_room);
         newRoom.setOnClickListener(view -> {
@@ -93,13 +96,17 @@ public class ConstructionActivity extends AppCompatActivity {
 
         Button openB = findViewById(R.id.open);
         openB.setOnClickListener(view -> {
-           Log.i("SAVE", listeHabitation.toString());
+        });
+
+        Button newHabitation = findViewById(R.id.new_habitation);
+        newHabitation.setOnClickListener(view -> {
+            hab = new Habitation();
+            FabriqueNumero.getInstance().resetCompteurPiece();
         });
     }
 
     @Override
     public void onBackPressed(){
-        Log.i("SAVE","SAVE");
         saving();
         saveListeHabitation();
         super.onBackPressed();
@@ -390,7 +397,7 @@ public class ConstructionActivity extends AppCompatActivity {
                 JSONObject piece = liste.getJSONObject(i);
                 String id = piece.getString("ID_HABITATION");
                 String nom = piece.getString("NOM_HABITATION");
-                listeHabitation.put(nom, id);
+                listeHabitation.put(id, nom);
             }
 
             String idLastHab = obj.getString("LAST_HAB");
