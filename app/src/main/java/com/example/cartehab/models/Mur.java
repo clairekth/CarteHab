@@ -60,4 +60,8 @@ public class Mur implements Serializable {
         return true;
     }
 
+    public boolean murADesPortes(){
+        return listePortes.size() != 0;
+    }
+
 }

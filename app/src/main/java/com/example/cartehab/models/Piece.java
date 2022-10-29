@@ -78,7 +78,8 @@ public class Piece implements Serializable {
         if (murSud == null || !murSud.murEstOK()) {
             return false;
         }
-        return true;
+
+        return murSud.murADesPortes() || murOuest.murADesPortes() || murEst.murADesPortes() || murNord.murADesPortes(); //Au moins un des murs à une porte
     }
 
     @Override
