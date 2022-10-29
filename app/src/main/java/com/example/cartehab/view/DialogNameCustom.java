@@ -5,11 +5,13 @@ import androidx.annotation.NonNull;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
+import com.example.cartehab.models.Habitation;
 
 public class DialogNameCustom extends Dialog {
 
@@ -21,11 +23,13 @@ public class DialogNameCustom extends Dialog {
     protected Button buttonOk;
     protected Context context;
     protected DialogNameCustom.FullNameListener listener;
+    protected Habitation hab;
 
-    public DialogNameCustom(@NonNull Context context, DialogNameCustom.FullNameListener listener) {
+    public DialogNameCustom(@NonNull Context context, DialogNameCustom.FullNameListener listener, Habitation h) {
         super(context);
         this.context = context;
         this.listener = listener;
+        this.hab = h;
     }
 
     @Override
@@ -38,9 +42,14 @@ public class DialogNameCustom extends Dialog {
             String fullName = this.textInput.getText().toString();
 
             if(fullName== null || fullName.isEmpty())  {
-                Toast.makeText(this.context, "Please enter your name", Toast.LENGTH_LONG).show();
+                Toast.makeText(this.context, "Entrez le nom d'une pièce", Toast.LENGTH_LONG).show();
                 return;
             }
+            if (hab.nomPieceExisteDeja(fullName)) {
+                Toast.makeText(this.context, "Ce nom de pièce existe déjà.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             this.dismiss(); // Close Dialog
 
             if(this.listener!= null)  {

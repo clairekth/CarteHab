@@ -5,11 +5,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,8 +33,6 @@ import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.view.AdapterListRoom;
-import com.example.cartehab.view.DialogChooseRoomModification;
-import com.example.cartehab.view.DialogChooseRoomNext;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -161,30 +156,27 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
 
-        /*DialogChooseRoomModification.NameRoomToModifyListener listener = new DialogChooseRoomModification.NameRoomToModifyListener() {
-            @Override
-            public void nameRoomToModify(String fullName) {
-                setPiece(fullName);
-                roomName.setText(fullName);
-                dialogDismiss = true;
-            }
-        };
-        final DialogChooseRoomModification dialog = new DialogChooseRoomModification(ModificationRoomActivity.this, hab,listener);
-        dialog.showAlertDialog();*/
-
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.hashmapToList());
+        alert.setTitle("Choisissez la pièce à modifier : ");
         alert.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                Log.i("TEST","ADAP");
             }
         });
-
+        alert.setCancelable(false);
         alert.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.i("TEST","CLICK");
+
                 Piece p = adapter.getListePieces(which);
                 setPiece(p);
+                roomName.setText(p.getNom());
+                dialogDismiss = true;
+                dialog.dismiss();
             }
         });
 
@@ -255,6 +247,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
             if (dialogDismiss){
+                Log.i("ORIEN", orientation());
                 set3D();
             }
             lastUpdateTime = System.currentTimeMillis();

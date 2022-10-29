@@ -1,5 +1,7 @@
 package com.example.cartehab.models;
 
+import android.util.Log;
+
 import com.example.cartehab.outils.FabriqueNumero;
 
 import java.io.Serializable;
@@ -61,6 +63,22 @@ public class Piece implements Serializable {
 
     public String getNom(){
         return nom;
+    }
+
+    public boolean pieceEstOK() {
+        if (murEst == null || !murEst.murEstOK()){
+            return false;
+        }
+        if (murNord == null || !murEst.murEstOK()) {
+            return false;
+        }
+        if (murOuest == null || !murOuest.murEstOK()){
+            return false;
+        }
+        if (murSud == null || !murSud.murEstOK()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

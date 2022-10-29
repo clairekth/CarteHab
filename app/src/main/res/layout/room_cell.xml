@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,12 +9,18 @@
 
     <TextView
         android:id="@+id/room_name"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_weight="1"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        android:textSize="20pt"
-        />
+        android:textSize="15pt" />
+
+    <ImageView
+        android:id="@+id/imageView_error"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:srcCompat="@drawable/attention"
+        android:layout_marginStart="50dp"
+        app:layout_constraintStart_toEndOf="@id/room_name"/>
 
 
 </LinearLayout>

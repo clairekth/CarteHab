@@ -172,7 +172,7 @@ public class SelectDoorActivity extends AppCompatActivity {
                         holder.unlockCanvasAndPost(canvas);
 
                     }
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP && rectangle != null){
                     Porte p = new Porte(m, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
                     listePorte.add(rectangle);
 

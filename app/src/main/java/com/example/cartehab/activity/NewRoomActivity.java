@@ -150,8 +150,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 roomName.setText(p.getNom());
             }
         };
-        final DialogNameCustom dialog = new DialogNameCustom(this, listener);
-
+        final DialogNameCustom dialog = new DialogNameCustom(this, listener,h);
+        dialog.setCancelable(false);
         dialog.show();
 
         listeButtonPorte = new ArrayList<>();
@@ -218,6 +218,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
             set3D();
+            Log.i("ORIEN", orientation() + " : " + degree);
+
             lastUpdateTime = System.currentTimeMillis();
         }
 
@@ -255,11 +257,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     }
 
     public String orientation(){
-        if (degree < 45 && degree > -45){
+        if (degree < 45 && degree >= -45){
             return "Nord";
-        } else if (degree > 45 && degree < 135){
+        } else if (degree >= 45 && degree < 135){
             return "Ouest";
-        } else if (degree < -45 && degree > -135){
+        } else if (degree < -45 && degree >= -135){
             return "Est";
         }
         return "Sud";

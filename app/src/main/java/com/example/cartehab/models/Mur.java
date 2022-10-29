@@ -53,4 +53,11 @@ public class Mur implements Serializable {
         listePortes.clear();
     }
 
+    public boolean murEstOK(){
+        for (Porte p : listePortes){
+            return !p.porteEstOK();  //Une des portes n'a pas de pièces suivantes
+        }
+        return true;
+    }
+
 }

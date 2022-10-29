@@ -1,10 +1,13 @@
 package com.example.cartehab.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,6 +38,14 @@ public class AdapterListRoom extends ArrayAdapter<Piece> {
         TextView textView = (TextView) roomItemView.findViewById(R.id.room_name);
         textView.setText(listePieces.get(position).getNom());
 
+        ImageView imError = (ImageView) roomItemView.findViewById(R.id.imageView_error);
+        if (listePieces.get(position).pieceEstOK()){
+            imError.setVisibility(View.INVISIBLE);
+            Log.i("TEST","INV");
+        } else {
+            imError.setVisibility(View.VISIBLE);
+            Log.i("TEST","VIS");
+        }
         return roomItemView;
 
     }

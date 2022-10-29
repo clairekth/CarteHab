@@ -58,4 +58,13 @@ public class Habitation implements Serializable {
         }
         return pieces;
     }
+
+    public boolean nomPieceExisteDeja(String nom){
+        for (Piece p : listePieces.values()){
+            if (p.getNom().equalsIgnoreCase(nom)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

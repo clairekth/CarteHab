@@ -7,9 +7,7 @@ import java.io.Serializable;
 public class Porte implements Serializable {
     protected int left, top, right, bottom;
     protected Mur mur;
-    protected Piece pieceActuelle;
     protected Piece pieceSuivante;
-    protected String idPieceSuivante;
 
     public Porte(Mur m, int l, int t, int r, int b){
         mur = m;
@@ -17,15 +15,12 @@ public class Porte implements Serializable {
         top = t;
         right = r;
         bottom = b;
-        pieceActuelle = m.getPiece();
     }
 
     public void setPieceSuivante(Piece p){
         pieceSuivante = p;
     }
-    public void setIdPieceSuivante(String i){
-        idPieceSuivante = i;
-    }
+
     @Override
     public String toString() {
         return "Porte{" +
@@ -34,7 +29,6 @@ public class Porte implements Serializable {
                 ", right=" + right +
                 ", bottom=" + bottom +
                 ", mur=" + mur +
-                ", pieceActuelle=" + pieceActuelle +
                 ", pieceSuivante=" + pieceSuivante +
                 '}';
     }
@@ -64,7 +58,8 @@ public class Porte implements Serializable {
         return mur;
     }
 
-    public Piece getPieceActuelle(){
-        return pieceActuelle;
+    public boolean porteEstOK(){
+        return pieceSuivante != null;
     }
+
 }
