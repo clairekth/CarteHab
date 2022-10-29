@@ -213,10 +213,13 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData);
             SensorManager.getOrientation(rotationMatrix, orientationAngles);
             degree = (float) Math.toDegrees(-orientationAngles[0]);
-            //Log.i("COmpass", "" + d);
-
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
+            //Log.i("COmpass", "" + d);
+
+            //Permet d'avoir un degree un peu plus stable
+            degree = (float) Math.toDegrees((orientationAngles[0] + Math.PI*2) % (Math.PI*2));
+
             set3D();
             Log.i("ORIEN", orientation() + " : " + degree);
 
@@ -257,14 +260,23 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     }
 
     public String orientation(){
-        if (degree < 45 && degree >= -45){
+        /*if (degree < 45 && degree >= -45){
             return "Nord";
         } else if (degree >= 45 && degree < 135){
             return "Ouest";
         } else if (degree < -45 && degree >= -135){
             return "Est";
         }
-        return "Sud";
+        return "Sud";*/
+
+        if (degree < 90) {
+            return "Nord";
+        } else if (degree >=90 && degree < 180) {
+            return "Est";
+        } else if (degree >=180 && degree < 270){
+            return "Sud";
+        }
+        return "Ouest";
     }
 
     public void set3D(){
