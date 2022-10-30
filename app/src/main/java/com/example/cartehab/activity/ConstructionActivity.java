@@ -68,7 +68,7 @@ public class ConstructionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_construction);
-        listeHabitation = new ArrayList<>();
+
         String nomLastHab = openListeHabitation();
         if (nomLastHab == null){
             hab = new Habitation();
@@ -122,30 +122,24 @@ public class ConstructionActivity extends AppCompatActivity {
         newHabitation.setOnClickListener(view -> {
             save();
             saveListeHabitation();
-            hab = new Habitation();
-            nameHab.setText(hab.getName());
-            listeHabitation.add(hab.getName());
-            FabriqueNumero.getInstance().resetCompteurPiece();
+            newHabitation();
         });
 
         Button supprimer = findViewById(R.id.delete_habitation);
         supprimer.setOnClickListener(view->{
             getApplicationContext().deleteFile(hab.getName()+".data");
             listeHabitation.remove(hab.getName());
-            String nomLastHab1 = null;
 
+            String nomLastHab1 = null;
             if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
                 saveListeHabitation();
-                listeHabitation = new ArrayList<>();
                 nomLastHab1 = openListeHabitation();
-
             }
-            if (nomLastHab1 == null){
-                hab = new Habitation();
-                listeHabitation.add(hab.getName());
-            } else {
-                open(nomLastHab1);
 
+            if (nomLastHab1 == null){ //Il n'y a pas d'autres habitations enregistrées -> créer donc une nouvelle.
+                newHabitation();
+            } else {
+                open(nomLastHab1); //Ouvre la dernière habitation
             }
             nameHab.setText(hab.getName());
 
@@ -213,6 +207,7 @@ public class ConstructionActivity extends AppCompatActivity {
     }
 
     public String openListeHabitation(){
+        listeHabitation = new ArrayList<>();
         File file = new File(getApplicationContext().getFilesDir(),"listehabitation.json");
         try {
             FileReader fileReader = new FileReader(file);
@@ -225,8 +220,8 @@ public class ConstructionActivity extends AppCompatActivity {
             }
             bufferedReader.close();
 
-            String responce = stringBuilder.toString();
-            JSONObject obj  = new JSONObject(responce);
+            String res = stringBuilder.toString();
+            JSONObject obj  = new JSONObject(res);
             int cpthabitation = obj.getInt("CPTHABITATION");
             FabriqueNumero.getInstance().setCptHabitation(cpthabitation);
 
@@ -246,6 +241,12 @@ public class ConstructionActivity extends AppCompatActivity {
         return null;
     }
 
+    protected void newHabitation(){
+        hab = new Habitation();
+        nameHab.setText(hab.getName());
+        listeHabitation.add(hab.getName());
+        FabriqueNumero.getInstance().resetCompteurPiece();
+    }
 
     protected AlertDialog alertOpenHabitation(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -273,7 +274,6 @@ public class ConstructionActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onPause(){
         save();
@@ -288,7 +288,12 @@ public class ConstructionActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-
+    @Override
+    public void finish(){
+        save();
+        saveListeHabitation();
+        super.finish();
+    }
 
 
 }
