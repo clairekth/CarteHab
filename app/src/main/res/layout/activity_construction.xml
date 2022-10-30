@@ -6,46 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".activity.ConstructionActivity">
 
-    <Button
-        android:id="@+id/new_room"
+    <TextView
+        android:id="@+id/nom_hab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ajouter une pièce"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="30pt"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/modif_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Modifier une pièce"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/new_room"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
-    <Button
-        android:id="@+id/open"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/modif_room"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nom_hab"
+        >
 
-    <Button
-        android:id="@+id/new_habitation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/open"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        <Button
+            android:id="@+id/new_room"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Ajouter une pièce"
+             />
+
+        <Button
+            android:id="@+id/modif_room"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:text="Modifier une pièce"
+
+            />
+
+        <Button
+            android:id="@+id/open"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:text="Ouvrir"
+            />
+
+        <Button
+            android:id="@+id/new_habitation"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:text="Nouveau"
+            />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

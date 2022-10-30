@@ -17,6 +17,7 @@ public class Habitation implements Serializable {
     public Habitation(){
         listePieces = new HashMap<>();
         id = "HAB" + FabriqueNumero.getInstance().getNumeroHabitation();
+        name = id;
     }
 
     public Habitation(String id){
@@ -35,6 +36,9 @@ public class Habitation implements Serializable {
 
     public String getId(){
         return id;
+    }
+    public String getName(){
+        return name;
     }
     public Piece getPiece(String nom){
         if (nom.equals("Pièce non créée")){

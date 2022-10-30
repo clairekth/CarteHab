@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.JsonWriter;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
@@ -35,6 +36,7 @@ import java.util.Map;
 public class ConstructionActivity extends AppCompatActivity {
     protected Habitation hab;
     protected HashMap<String,String> listeHabitation;
+    protected TextView nameHab;
 
     final ActivityResultLauncher<Intent> launcherNewRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -63,6 +65,10 @@ public class ConstructionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_construction);
         hab = new Habitation();
 
+        nameHab = findViewById(R.id.nom_hab);
+        nameHab.setText(hab.getName());
+
+
         Button newRoom = (Button) findViewById(R.id.new_room);
         newRoom.setOnClickListener(view -> {
             Intent intent = new Intent(ConstructionActivity.this, NewRoomActivity.class);
@@ -88,6 +94,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button newHabitation = findViewById(R.id.new_habitation);
         newHabitation.setOnClickListener(view -> {
             hab = new Habitation();
+            nameHab.setText(hab.getName());
             FabriqueNumero.getInstance().resetCompteurPiece();
         });
     }
