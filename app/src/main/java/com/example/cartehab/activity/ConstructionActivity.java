@@ -184,7 +184,9 @@ public class ConstructionActivity extends AppCompatActivity {
                 writer.value(hab.getName());
             }
             if (s == 1){ //Habitation actuelle étant suppr, on mets en dernière habitation la dernière créée.
-                writer.value(listeHabitation.get(listeHabitation.size() -1));
+                if (listeHabitation.size() != 0) {
+                    writer.value(listeHabitation.get(listeHabitation.size() - 1));
+                }
             }
             writer.endObject();
 
@@ -264,14 +266,22 @@ public class ConstructionActivity extends AppCompatActivity {
     public void supprimerHabitationEtOuvrirDerniereHabitation(){
         getApplicationContext().deleteFile(hab.getName()+".data");
         listeHabitation.remove(hab.getName());
-        saveListeHabitation(1);
-        nomLastHab =  openListeHabitation();
+        String nomLastHab1 = null;
+
         if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
-            open(nomLastHab);
-            nameHab.setText(hab.getName());
-        } else {
-            newHabitation();
+            saveListeHabitation(1);
+            listeHabitation = new ArrayList<>();
+            nomLastHab1 = openListeHabitation();
+
         }
+        if (nomLastHab1 == null){
+            hab = new Habitation();
+            listeHabitation.add(hab.getName());
+        } else {
+            open(nomLastHab1);
+
+        }
+        nameHab.setText(hab.getName());
     }
 
     /**
