@@ -395,7 +395,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 b.setBackgroundColor(Color.argb(60,50,156,123));
                 b.setOnClickListener(viewB -> {
                     if (p.getPieceSuivante() != null) {
-                        Toast.makeText(ModificationRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ModificationRoomActivity.this, p.getPieceSuivante().getNom(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ModificationRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
                     }

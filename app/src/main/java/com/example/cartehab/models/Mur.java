@@ -56,8 +56,8 @@ public class Mur implements Serializable {
 
     public boolean murEstOK(){
         for (Porte p : listePortes){
-            if (!p.porteEstOK()){
-                return false; //Une des portes n'a pas de pièces suivantes
+            if (p.porteEstOK() != 0){
+                return false; //Une des portes a une erreur
             }
         }
         return true;
@@ -66,5 +66,6 @@ public class Mur implements Serializable {
     public boolean murADesPortes(){
         return listePortes.size() != 0;
     }
+
 
 }

@@ -45,18 +45,13 @@ public class DialogChooseRoomNext{
         builder.setTitle("Selectionner la pièce suivante");
         final String[] pieces;
         if (habitation.nomPieceExisteDeja(mur.getPiece().getNom())){ //On check si la pièce où on est actuellement est déjà dans la liste
-            Log.i("Dia", "ici");
             pieces = new String[habitation.getListePieces().size()]; //Si oui -> on est dans la modification, il faut l'enlever de la sélection possible
         } else {
-            Log.i("Dia","iciii");
             pieces = new String[habitation.getListePieces().size() + 1];//Si non -> on est dans la création; elle n'est donc pas encore dans la liste
         }
         int i =0;
         for (Piece p : habitation.getListePieces().values()){
-            Log.i("Dia", p.getId() +" - " + mur.getPiece().getId());
-
             if (!(p.getId().equals(mur.getPiece().getId()))){
-                Log.i("Dia", p.getNom());
                 pieces[i] = p.getNom();
                 i++;
             }

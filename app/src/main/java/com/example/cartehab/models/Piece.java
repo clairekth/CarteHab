@@ -82,6 +82,7 @@ public class Piece implements Serializable {
         return murSud.murADesPortes() || murOuest.murADesPortes() || murEst.murADesPortes() || murNord.murADesPortes(); //Au moins un des murs à une porte
     }
 
+
     public String erreurs(){
         boolean portesPresentes = false;
         StringBuilder sb = new StringBuilder();
@@ -89,7 +90,15 @@ public class Piece implements Serializable {
             sb.append("Il manque le mur Ouest.\n");
         } else {
             if (!murOuest.murEstOK()){
-                sb.append("Au moins un des portes du mur Ouest n'a pas de pièces suivantes.\n");
+                for (Porte p : murOuest.getListePortes()){
+                    if (p.porteEstOK() == 1){
+                        sb.append("Au moins un des portes du mur Ouest n'a pas de pièces suivantes.\n");
+                    } else if (p.porteEstOK() == 2){
+                        sb.append("Le mur Est de " + p.getPieceSuivante().getNom() + "n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                    } else if (p.porteEstOK() == 3){
+                        sb.append("Aucune portes du mur Est de " + p.getPieceSuivante().getNom() + " n'a de portes reliant " + this.nom + "\n");
+                    }
+                }
             }
             if (murOuest.murADesPortes()){
                 portesPresentes = true;
@@ -99,7 +108,15 @@ public class Piece implements Serializable {
             sb.append("Il manque le mur Est.\n");
         } else {
             if (!murEst.murEstOK()){
-                sb.append("Au moins un des portes du mur Est n'a pas de pièces suivantes.\n");
+                for (Porte p : murEst.getListePortes()){
+                    if (p.porteEstOK() == 1){
+                        sb.append("Au moins un des portes du mur Est n'a pas de pièces suivantes.\n");
+                    } else if (p.porteEstOK() == 2){
+                        sb.append("Le mur Ouest de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                    } else if (p.porteEstOK() == 3){
+                        sb.append("Aucune portes du mur Ouest de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom +"\n");
+                    }
+                }
             }
             if (murEst.murADesPortes()){
                 portesPresentes = true;
@@ -109,8 +126,15 @@ public class Piece implements Serializable {
             sb.append("Il manque le mur Nord.\n");
         }else {
             if (!murNord.murEstOK()){
-                sb.append("Au moins un des portes du mur Nord n'a pas de pièces suivantes.\n");
-            }
+                for (Porte p : murNord.getListePortes()){
+                    if (p.porteEstOK() == 1){
+                        sb.append("Au moins un des portes du mur Nord n'a pas de pièces suivantes.\n");
+                    } else if (p.porteEstOK() == 2){
+                        sb.append("Le mur Sud de " + p.getPieceSuivante().getNom() + "n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                    } else if (p.porteEstOK() == 3){
+                        sb.append("Aucune portes du mur Sud de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom + "\n");
+                    }
+                }              }
             if (murNord.murADesPortes()){
                 portesPresentes = true;
             }
@@ -119,7 +143,15 @@ public class Piece implements Serializable {
             sb.append("Il manque le mur Sud.\n");
         } else {
             if (!murSud.murEstOK()){
-                sb.append("Au moins un des portes du mur Sud n'a pas de pièces suivantes.\n");
+                for (Porte p : murSud.getListePortes()){
+                    if (p.porteEstOK() == 1){
+                        sb.append("Au moins un des portes du mur Sud n'a pas de pièces suivantes.\n");
+                    } else if (p.porteEstOK() == 2){
+                        sb.append("Le mur Nord de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                    } else if (p.porteEstOK() == 3){
+                        sb.append("Aucune portes du mur Nord de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom +"\n");
+                    }
+                }
             }
             if (murSud.murADesPortes()){
                 portesPresentes = true;
@@ -132,6 +164,8 @@ public class Piece implements Serializable {
 
         return sb.toString();
     }
+
+
 
     @Override
     public String toString() {
