@@ -45,6 +45,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     protected ImageView wall;
     protected ConstraintLayout layout;
     protected long lastUpdateTime = 0;
+    protected TextView orientation;
     /**
      * Champ contenant le SensorManager.
      */
@@ -154,9 +155,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         dialog.setCancelable(false);
         dialog.show();
 
+
         listeButtonPorte = new ArrayList<>();
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
+        orientation = findViewById(R.id.orientation);
 
         Button prendrePhoto = (Button) findViewById(R.id.take_picture);
         prendrePhoto.setOnClickListener(view -> {
@@ -281,6 +284,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
     public void set3D(){
         if (orientation().equals("Nord")){
+            orientation.setText("Nord");
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -290,6 +294,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 afficherMur(p.getMurNord());
             }
         } else if (orientation().equals("Est")){
+            orientation.setText("Est");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -302,6 +308,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 wall.setImageBitmap(null);
             }
         } else if (orientation().equals("Sud")){
+            orientation.setText("Sud");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -313,6 +321,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 wall.setImageBitmap(null);
             }
         } else {
+            orientation.setText("Ouest");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }

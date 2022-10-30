@@ -52,6 +52,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     protected SensorManager sensorManager;
     protected TextView roomName;
     private boolean dialogDismiss;
+    protected TextView orientation;
 
 
     /**
@@ -146,6 +147,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         listeButtonPorte = new ArrayList<>();
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
+        orientation = findViewById(R.id.orientation);
 
         dialogDismiss = false;
 
@@ -162,16 +164,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         alert.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                Log.i("TEST","ADAP");
             }
         });
         alert.setCancelable(false);
         alert.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i("TEST","CLICK");
-
                 Piece p = adapter.getListePieces(which);
                 setPiece(p);
                 roomName.setText(p.getNom());
@@ -247,7 +245,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
             if (dialogDismiss){
-                Log.i("ORIEN", orientation());
                 set3D();
             }
             lastUpdateTime = System.currentTimeMillis();
@@ -272,18 +269,29 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     }
 
     public String orientation(){
-        if (degree < 45 && degree > -45){
+        /*if (degree < 45 && degree >= -45){
             return "Nord";
-        } else if (degree > 45 && degree < 135){
+        } else if (degree >= 45 && degree < 135){
             return "Ouest";
-        } else if (degree < -45 && degree > -135){
+        } else if (degree < -45 && degree >= -135){
             return "Est";
         }
-        return "Sud";
+        return "Sud";*/
+
+        if (degree < 90) {
+            return "Nord";
+        } else if (degree >=90 && degree < 180) {
+            return "Est";
+        } else if (degree >=180 && degree < 270){
+            return "Sud";
+        }
+        return "Ouest";
     }
 
     public void set3D(){
         if (orientation().equals("Nord")){
+            orientation.setText("Nord");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -293,6 +301,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 afficherMur(piece.getMurNord());
             }
         } else if (orientation().equals("Est")){
+            orientation.setText("Est");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -305,6 +315,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 wall.setImageBitmap(null);
             }
         } else if (orientation().equals("Sud")){
+            orientation.setText("Sud");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -316,6 +328,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 wall.setImageBitmap(null);
             }
         } else {
+            orientation.setText("Ouest");
+
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
