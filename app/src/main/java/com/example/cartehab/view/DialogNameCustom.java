@@ -13,6 +13,9 @@ import android.widget.Toast;
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class DialogNameCustom extends Dialog {
 
     public interface FullNameListener {
@@ -24,12 +27,22 @@ public class DialogNameCustom extends Dialog {
     protected Context context;
     protected DialogNameCustom.FullNameListener listener;
     protected Habitation hab;
+    protected ArrayList<String> nomsH;
 
     public DialogNameCustom(@NonNull Context context, DialogNameCustom.FullNameListener listener, Habitation h) {
         super(context);
         this.context = context;
         this.listener = listener;
         this.hab = h;
+    }
+
+    public DialogNameCustom(@NonNull Context context, DialogNameCustom.FullNameListener listener, ArrayList<String> noms) {
+        super(context);
+        this.context = context;
+        this.listener = listener;
+        nomsH = noms;
+        hab = null;
+
     }
 
     @Override
@@ -40,14 +53,23 @@ public class DialogNameCustom extends Dialog {
         buttonOk = findViewById(R.id.ok_button);
         buttonOk.setOnClickListener(view -> {
             String fullName = this.textInput.getText().toString();
+            if (hab != null) {
+                if (fullName == null || fullName.isEmpty()) {
+                    Toast.makeText(this.context, "Entrez le nom d'une pièce", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (hab.nomPieceExisteDeja(fullName)) {
+                    Toast.makeText(this.context, "Ce nom de pièce existe déjà.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            } else {
 
-            if(fullName== null || fullName.isEmpty())  {
-                Toast.makeText(this.context, "Entrez le nom d'une pièce", Toast.LENGTH_LONG).show();
-                return;
-            }
-            if (hab.nomPieceExisteDeja(fullName)) {
-                Toast.makeText(this.context, "Ce nom de pièce existe déjà.", Toast.LENGTH_LONG).show();
-                return;
+                for (String n : nomsH){
+                    if (n.equalsIgnoreCase(fullName)){
+                        Toast.makeText(this.context, "Ce nom d'habitation existe déjà.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
             }
 
             this.dismiss(); // Close Dialog
