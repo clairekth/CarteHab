@@ -5,12 +5,15 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonWriter;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,12 +71,9 @@ public class ConstructionActivity extends AppCompatActivity {
         listeHabitation = new ArrayList<>();
         String nomLastHab = openListeHabitation();
         if (nomLastHab == null){
-            Log.i("CONS", "error");
-
             hab = new Habitation();
             listeHabitation.add(hab.getName());
         } else {
-            Log.i("CONS", nomLastHab);
             open(nomLastHab);
         }
 
@@ -102,9 +102,34 @@ public class ConstructionActivity extends AppCompatActivity {
 
         Button openB = findViewById(R.id.open);
         openB.setOnClickListener(view -> {
-            open("HAB1");
-            nameHab.setText(hab.getName());
-            Log.i("Cons",hab.toString());
+            if (listeHabitation.size() == 1){
+                Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrés.", Toast.LENGTH_LONG).show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Choisissez l'habitation à ouvrir : ");
+                String[] noms = new String[listeHabitation.size()];
+                noms = listeHabitation.toArray(noms);
+                final String[] finalNoms = noms;
+                builder.setSingleChoiceItems(noms,-1, null).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+                        open(finalNoms[n]);
+                        Log.i("Cons", "open : " + hab.getName());
+                        nameHab.setText(hab.getName());
+                    }
+                });
+
+                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog d = builder.create();
+                d.show();
+            }
+
         });
 
         Button saveB = findViewById(R.id.save);
@@ -121,6 +146,33 @@ public class ConstructionActivity extends AppCompatActivity {
             nameHab.setText(hab.getName());
             listeHabitation.add(hab.getName());
             FabriqueNumero.getInstance().resetCompteurPiece();
+        });
+
+        Button supprimer = findViewById(R.id.delete_habitation);
+        supprimer.setOnClickListener(view->{
+            getApplicationContext().deleteFile(hab.getName()+".data");
+            listeHabitation.remove(hab.getName());
+            String nomLastHab1 = null;
+
+            if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
+                saveListeHabitation();
+                listeHabitation = new ArrayList<>();
+                nomLastHab1 = openListeHabitation();
+
+            }
+            if (nomLastHab1 == null){
+                hab = new Habitation();
+                listeHabitation.add(hab.getName());
+            } else {
+                Log.i("Cons", "av " + nomLastHab1);
+                open(nomLastHab1);
+                Log.i("Cons", "supp" + hab.getName());
+
+            }
+            nameHab.setText(hab.getName());
+            //hab = new Habitation();
+            //nameHab.setText(hab.getName());
+            //listeHabitation.add(hab.getName());
         });
     }
 
@@ -140,13 +192,16 @@ public class ConstructionActivity extends AppCompatActivity {
 
     public void open(String name){
         try {
+            Log.i("Cons","ouvert" + name);
             FileInputStream fis =  getApplicationContext().openFileInput(name + ".data");
             ObjectInputStream o = new ObjectInputStream(fis);
             hab = (Habitation) o.readObject();
+
             o.close();
             fis.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            Log.i("Cons","pamarché");
         }
 
     }
@@ -159,18 +214,22 @@ public class ConstructionActivity extends AppCompatActivity {
             writer.value(FabriqueNumero.getInstance().getNumeroHabitationSansIncre());
 
             writer.name("LISTE_HABITATION");
-            writer.beginArray();
-            for (String h : listeHabitation){
-                Log.i("CONS", "SAVE" + h);
-                writer.beginObject();
-                writer.name("NOM_HABITATION");
-                writer.value(h);
-                writer.endObject();
+            if (listeHabitation.size() != 0){
+                writer.beginArray();
+                for (String h : listeHabitation){
+                    writer.beginObject();
+                    writer.name("NOM_HABITATION");
+                    writer.value(h);
+                    writer.endObject();
+                }
+                writer.endArray();
             }
-            writer.endArray();
+
 
             writer.name("LAST_HAB");
-            writer.value(hab.getName());
+            if (listeHabitation.size() != 0){
+                writer.value(listeHabitation.get(listeHabitation.size() -1));
+            }
             writer.endObject();
 
             writer.close();
@@ -201,7 +260,6 @@ public class ConstructionActivity extends AppCompatActivity {
             for (int i = 0 ; i < liste.length(); i ++){
                 JSONObject piece = liste.getJSONObject(i);
                 String nom = piece.getString("NOM_HABITATION");
-                Log.i("CONS", "open " + nom);
                 listeHabitation.add(nom);
             }
 
