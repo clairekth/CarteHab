@@ -202,7 +202,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             degree = (float) Math.toDegrees((orientationAngles[0] + Math.PI*2) % (Math.PI*2));
 
             set3D();
-            Log.i("ORIEN", orientation() + " : " + degree);
+            //Log.i("ORIEN", orientation() + " : " + degree);
 
             lastUpdateTime = System.currentTimeMillis();
         }
@@ -212,32 +212,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    @Override
-    public void onBackPressed(){
-        sensorManager.unregisterListener(NewRoomActivity.this);
-        Intent data = new Intent();
-        data.putExtra("Piece", p);
-        setResult(RESULT_OK, data);
-        finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause(){
-        sensorManager.unregisterListener(NewRoomActivity.this);
-        Intent data = new Intent();
-        data.putExtra("Piece", p);
-        setResult(RESULT_OK, data);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public String orientation(){
@@ -330,7 +304,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
-                Log.i("Porte", "NewRoom : " + p.toString());
+                //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
                     b.setText("Pièce suivante non créée.");
@@ -352,6 +326,32 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        sensorManager.unregisterListener(NewRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Piece", p);
+        setResult(RESULT_OK, data);
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause(){
+        sensorManager.unregisterListener(NewRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Piece", p);
+        setResult(RESULT_OK, data);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override

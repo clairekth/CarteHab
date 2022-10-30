@@ -20,6 +20,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -34,6 +36,7 @@ import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.view.AdapterListRoom;
+import com.example.cartehab.view.DialogNameCustom;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -280,21 +283,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     }
 
-    @Override
-    protected void onPause(){
-        sensorManager.unregisterListener(ModificationRoomActivity.this);
-        Intent data = new Intent();
-        data.putExtra("Piece", piece);
-        setResult(RESULT_OK, data);
-        super.onPause();
-    }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
-    }
 
     public String orientation(){
         /*if (degree < 45 && degree >= -45){
@@ -398,7 +387,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
-                Log.i("Porte", "NewRoom : " + p.toString());
+                //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
                     b.setText("Pièce suivante non créée.");
@@ -422,15 +411,78 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         }
     }
 
+    /**
+     * Méthode de création du menu.
+     * @param menu Le menu.
+     * @return true.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    /**
+     * Méthode qui gère les actions des items du menu.
+     * @param item Les items du menu.
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.modifier_nom:
+                DialogNameCustom.FullNameListener listener = new DialogNameCustom.FullNameListener() {
+                    @Override
+                    public void fullNameEntered(String fullName) {
+                        piece.setNom(fullName);
+                        roomName.setText(piece.getNom());
+                    }
+                };
+                final DialogNameCustom dialog = new DialogNameCustom(this, listener,hab);
+                dialog.show();
+                return true;
+            case R.id.delete_piece:
+                hab.remove(piece);
+                finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed(){
+        sensorManager.unregisterListener(ModificationRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Hab", hab);
+        setResult(RESULT_OK, data);
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause(){
+        sensorManager.unregisterListener(ModificationRoomActivity.this);
+        Intent data = new Intent();
+        data.putExtra("Hab", hab);
+        setResult(RESULT_OK, data);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
     @Override
     public void finish() {
         Intent data = new Intent();
-        if (piece != null) {
-            data.putExtra("Piece", piece);
-            setResult(RESULT_OK, data);
-        } else {
-            setResult(RESULT_CANCELED);
-        }
+
+        data.putExtra("Hab", hab);
+        setResult(RESULT_OK, data);
+
         super.finish();
     }
 

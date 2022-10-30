@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CarteHab</string>
+    <string name="modifier_le_nom">Modifier le nom</string>
+    <string name="supprimer_la_piece">Supprimer la pièce</string>
 </resources>

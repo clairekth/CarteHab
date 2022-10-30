@@ -61,7 +61,6 @@ public class Porte implements Serializable {
     }
 
     public boolean porteEstOK(){
-        Log.i("TEST","CC");
         return pieceSuivante != null;
     }
 

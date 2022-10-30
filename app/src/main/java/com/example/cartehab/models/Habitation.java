@@ -24,12 +24,15 @@ public class Habitation implements Serializable {
         this.id = id;
     }
     public void addPiece(Piece p){
-        listePieces.put(p.getNom(), p);
+        listePieces.put(p.getId(), p);
     }
 
     public void remove(Piece piece){
-        listePieces.remove(piece);
+        Log.i("Hab", "av" + this.toString());
+        listePieces.remove(piece.getId());
+        Log.i("Hab","remove : " + this.toString());
     }
+
     public String getId(){
         return id;
     }

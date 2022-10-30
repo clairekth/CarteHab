@@ -47,10 +47,13 @@ public class ConstructionActivity extends AppCompatActivity {
     final ActivityResultLauncher<Intent> launcherModificationRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Piece p = (Piece) result.getData().getSerializableExtra("Piece");
-                    hab.remove(p);
-                    hab.addPiece(p);
+                    Habitation h = (Habitation) result.getData().getSerializableExtra("Hab");
+                    hab = h;
+                    Log.i("Construction","slt");
+                } else {
+
                 }
+                Log.i("Construction",hab.toString());
             });
 
 
