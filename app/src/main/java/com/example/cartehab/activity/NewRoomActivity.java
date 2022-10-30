@@ -46,6 +46,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     protected ConstraintLayout layout;
     protected long lastUpdateTime = 0;
     protected TextView orientation;
+
     /**
      * Champ contenant le SensorManager.
      */
@@ -169,29 +170,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             }
         });
 
-        Button modification = (Button) findViewById(R.id.modification_button);
-        modification.setOnClickListener(view -> {
-            if (orientation().equals("Nord")){
-                m = p.getMurNord();
-            } else if (orientation().equals("Sud")){
-                m = p.getMurSud();
-            } else if (orientation().equals("Est")){
-                m = p.getMurEst();
-            } else {
-                m = p.getMurOuest();
-            }
-
-            if (m == null) {
-                Toast.makeText(NewRoomActivity.this, "Impossible de modifier. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
-                intent.putExtra("Mur",m);
-                intent.putExtra("Hab", h);
-                launcherSelectDoor.launch(intent);
-            }
-        });
-
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -292,6 +270,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             if (p.getMurNord() != null){
                 afficherMur(p.getMurNord());
+
+            } else {
+                wall.setImageBitmap(null);
             }
         } else if (orientation().equals("Est")){
             orientation.setText("Est");
@@ -306,6 +287,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             } else {
                 wall.setImageBitmap(null);
+
             }
         } else if (orientation().equals("Sud")){
             orientation.setText("Sud");
@@ -319,6 +301,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             } else {
                 wall.setImageBitmap(null);
+
             }
         } else {
             orientation.setText("Ouest");
@@ -329,7 +312,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             listeButtonPorte.clear();
             if (p.getMurOuest() != null){
                 afficherMur(p.getMurOuest());
-
             } else {
                 wall.setImageBitmap(null);
             }

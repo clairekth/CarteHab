@@ -53,6 +53,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     protected TextView roomName;
     private boolean dialogDismiss;
     protected TextView orientation;
+    protected Button modification;
 
 
     /**
@@ -148,6 +149,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
         orientation = findViewById(R.id.orientation);
+        modification = findViewById(R.id.modification_button);
 
         dialogDismiss = false;
 
@@ -158,6 +160,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         sensorManager.registerListener(ModificationRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
 
+        /*--AlertDialog qui permet de choisir la pièce que l'on veut modifier--*/
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.hashmapToList());
         alert.setTitle("Choisissez la pièce à modifier : ");
@@ -183,7 +186,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             finish();
         });
         alert.show();
-
+        /*----------------------------------------------------------*/
 
         Button prendrePhoto = (Button) findViewById(R.id.take_picture);
         prendrePhoto.setOnClickListener(view -> {
@@ -194,7 +197,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
         });
 
-        Button modification = (Button) findViewById(R.id.modification_button);
         modification.setOnClickListener(view -> {
             if (orientation().equals("Nord")){
                 m = piece.getMurNord();
@@ -207,7 +209,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             }
 
             if (m == null) {
-                Toast.makeText(ModificationRoomActivity.this, "Impossible de modifier. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModificationRoomActivity.this, "Impossible de modifier ce mur. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                 intent.putExtra("Mur",m);
@@ -302,6 +304,11 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             if (piece.getMurNord() != null){
                 afficherMur(piece.getMurNord());
+                modification.setEnabled(true);
+            } else {
+                wall.setImageBitmap(null);
+                modification.setEnabled(false);
+
             }
         } else if (orientation().equals("Est")){
             orientation.setText("Est");
@@ -313,9 +320,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             if (piece.getMurEst() != null){
                 afficherMur(piece.getMurEst());
+                modification.setEnabled(true);
 
             } else {
                 wall.setImageBitmap(null);
+                modification.setEnabled(false);
+
             }
         } else if (orientation().equals("Sud")){
             orientation.setText("Sud");
@@ -326,9 +336,13 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             listeButtonPorte.clear();
             if (piece.getMurSud() != null){
                 afficherMur(piece.getMurSud());
+                modification.setEnabled(true);
+
 
             } else {
                 wall.setImageBitmap(null);
+                modification.setEnabled(false);
+
             }
         } else {
             orientation.setText("Ouest");
@@ -339,9 +353,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             listeButtonPorte.clear();
             if (piece.getMurOuest() != null){
                 afficherMur(piece.getMurOuest());
+                modification.setEnabled(true);
 
             } else {
                 wall.setImageBitmap(null);
+                modification.setEnabled(false);
+
             }
         }
     }

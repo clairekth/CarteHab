@@ -62,14 +62,6 @@
             android:text="Prendre une photo"
 
             />
-
-        <Button
-            android:id="@+id/modification_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Modifier mur"
-            />
     </LinearLayout>
 
 
