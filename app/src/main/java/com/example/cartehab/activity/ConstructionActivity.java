@@ -11,17 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonWriter;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
-import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
-import com.example.cartehab.models.Porte;
 import com.example.cartehab.outils.FabriqueNumero;
 
 import org.json.JSONArray;
@@ -31,7 +27,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,8 +34,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ConstructionActivity extends AppCompatActivity {
     protected Habitation hab;
@@ -103,7 +96,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button openB = findViewById(R.id.open);
         openB.setOnClickListener(view -> {
             if (listeHabitation.size() == 1){
-                Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrés.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrées.", Toast.LENGTH_LONG).show();
             } else {
                 save();
                 AlertDialog d = alertOpenHabitation();
@@ -127,21 +120,7 @@ public class ConstructionActivity extends AppCompatActivity {
 
         Button supprimer = findViewById(R.id.delete_habitation);
         supprimer.setOnClickListener(view->{
-            getApplicationContext().deleteFile(hab.getName()+".data");
-            listeHabitation.remove(hab.getName());
-
-            String nomLastHab1 = null;
-            if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
-                saveListeHabitation();
-                nomLastHab1 = openListeHabitation();
-            }
-
-            if (nomLastHab1 == null){ //Il n'y a pas d'autres habitations enregistrées -> créer donc une nouvelle.
-                newHabitation();
-            } else {
-                open(nomLastHab1); //Ouvre la dernière habitation
-            }
-            nameHab.setText(hab.getName());
+            supprimerHabitationEtOuvrirDerniereHabitation();
 
         });
     }
@@ -273,6 +252,23 @@ public class ConstructionActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    public void supprimerHabitationEtOuvrirDerniereHabitation(){
+        getApplicationContext().deleteFile(hab.getName()+".data");
+        listeHabitation.remove(hab.getName());
+
+        String nomLastHab1 = null;
+        if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
+            saveListeHabitation();
+            nomLastHab1 = openListeHabitation();
+        }
+
+        if (nomLastHab1 == null){ //Il n'y a pas d'autres habitations enregistrées -> créer donc une nouvelle.
+            newHabitation();
+        } else {
+            open(nomLastHab1); //Ouvre la dernière habitation
+        }
+        nameHab.setText(hab.getName());
+    }
 
     @Override
     protected void onPause(){
