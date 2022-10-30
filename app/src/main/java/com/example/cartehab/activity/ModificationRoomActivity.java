@@ -115,17 +115,17 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                     try {
                         FileOutputStream fos = null;
                         if (orientation().equals("Nord")){
-                            m = new Mur(piece, "N",piece.getNom()+"MUR_NORD" );
-                            fos = openFileOutput(piece.getNom()+"MUR_NORD", MODE_PRIVATE);
+                            m = new Mur(piece, "N",piece.getId()+"MUR_NORD" );
+                            fos = openFileOutput(piece.getId()+"MUR_NORD", MODE_PRIVATE);
                         } else if (orientation().equals("Sud")){
-                            m = new Mur(piece, "S",piece.getNom()+"MUR_SUD" );
-                            fos = openFileOutput(piece.getNom()+"MUR_SUD", MODE_PRIVATE);
+                            m = new Mur(piece, "S",piece.getId()+"MUR_SUD" );
+                            fos = openFileOutput(piece.getId()+"MUR_SUD", MODE_PRIVATE);
                         } else if (orientation().equals("Est")){
-                            m = new Mur(piece, "E",piece.getNom()+"MUR_EST" );
-                            fos = openFileOutput(piece.getNom()+"MUR_EST", MODE_PRIVATE);
+                            m = new Mur(piece, "E",piece.getId()+"MUR_EST" );
+                            fos = openFileOutput(piece.getId()+"MUR_EST", MODE_PRIVATE);
                         } else {
-                            m = new Mur(piece, "O",piece.getNom()+"MUR_OUEST" );
-                            fos = openFileOutput(piece.getNom()+"MUR_OUEST", MODE_PRIVATE);
+                            m = new Mur(piece, "O",piece.getId()+"MUR_OUEST" );
+                            fos = openFileOutput(piece.getId()+"MUR_OUEST", MODE_PRIVATE);
                         }
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();

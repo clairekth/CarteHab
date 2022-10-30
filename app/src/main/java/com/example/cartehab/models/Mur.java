@@ -28,7 +28,7 @@ public class Mur implements Serializable {
     public String toString() {
         return "Mur{" +
                 "id='" + id + '\'' +
-                ", piece=" + piece +
+                ", piece=" + piece.getId() +
                 ", orientation='" + orientation + '\'' +
                 ", listePortes" + listePortes.size() +
                 '}';

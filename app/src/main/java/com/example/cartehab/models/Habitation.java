@@ -20,18 +20,13 @@ public class Habitation implements Serializable {
         name = id;
     }
 
-    public Habitation(String id){
-        listePieces = new HashMap<>();
-        this.id = id;
-    }
+
     public void addPiece(Piece p){
         listePieces.put(p.getId(), p);
     }
 
     public void remove(Piece piece){
-        Log.i("Hab", "av" + this.toString());
         listePieces.remove(piece.getId());
-        Log.i("Hab","remove : " + this.toString());
     }
 
     public String getId(){
@@ -41,10 +36,12 @@ public class Habitation implements Serializable {
         return name;
     }
     public Piece getPiece(String nom){
-        if (nom.equals("Pièce non créée")){
-            return null;
+        for (Piece p : listePieces.values()){
+            if (p.getNom().equals(nom)){
+                return p;
+            }
         }
-        return listePieces.get(nom);
+        return null;
     }
 
     public HashMap<String, Piece> getListePieces(){
