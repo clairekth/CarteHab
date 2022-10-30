@@ -105,28 +105,8 @@ public class ConstructionActivity extends AppCompatActivity {
             if (listeHabitation.size() == 1){
                 Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrés.", Toast.LENGTH_LONG).show();
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Choisissez l'habitation à ouvrir : ");
-                String[] noms = new String[listeHabitation.size()];
-                noms = listeHabitation.toArray(noms);
-                final String[] finalNoms = noms;
-                builder.setSingleChoiceItems(noms,-1, null).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-                        open(finalNoms[n]);
-                        Log.i("Cons", "open : " + hab.getName());
-                        nameHab.setText(hab.getName());
-                    }
-                });
-
-                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog d = builder.create();
+                save();
+                AlertDialog d = alertOpenHabitation();
                 d.show();
             }
 
@@ -164,15 +144,11 @@ public class ConstructionActivity extends AppCompatActivity {
                 hab = new Habitation();
                 listeHabitation.add(hab.getName());
             } else {
-                Log.i("Cons", "av " + nomLastHab1);
                 open(nomLastHab1);
-                Log.i("Cons", "supp" + hab.getName());
 
             }
             nameHab.setText(hab.getName());
-            //hab = new Habitation();
-            //nameHab.setText(hab.getName());
-            //listeHabitation.add(hab.getName());
+
         });
     }
 
@@ -192,7 +168,6 @@ public class ConstructionActivity extends AppCompatActivity {
 
     public void open(String name){
         try {
-            Log.i("Cons","ouvert" + name);
             FileInputStream fis =  getApplicationContext().openFileInput(name + ".data");
             ObjectInputStream o = new ObjectInputStream(fis);
             hab = (Habitation) o.readObject();
@@ -201,7 +176,6 @@ public class ConstructionActivity extends AppCompatActivity {
             fis.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            Log.i("Cons","pamarché");
         }
 
     }
@@ -273,7 +247,30 @@ public class ConstructionActivity extends AppCompatActivity {
     }
 
 
+    protected AlertDialog alertOpenHabitation(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choisissez l'habitation à ouvrir : ");
+        String[] noms = new String[listeHabitation.size()];
+        noms = listeHabitation.toArray(noms);
+        final String[] finalNoms = noms;
+        builder.setSingleChoiceItems(noms,0, null).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+                open(finalNoms[n]);
+                nameHab.setText(hab.getName());
+            }
+        });
 
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        return builder.create();
+    }
 
 
 
