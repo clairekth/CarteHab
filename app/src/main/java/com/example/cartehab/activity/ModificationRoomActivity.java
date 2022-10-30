@@ -244,6 +244,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
+
+            //Permet d'avoir un degree un peu plus stable
+            degree = (float) Math.toDegrees((orientationAngles[0] + Math.PI*2) % (Math.PI*2));
             if (dialogDismiss){
                 set3D();
             }
