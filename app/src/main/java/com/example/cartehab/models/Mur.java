@@ -1,6 +1,7 @@
 package com.example.cartehab.models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,7 +56,9 @@ public class Mur implements Serializable {
 
     public boolean murEstOK(){
         for (Porte p : listePortes){
-            return !p.porteEstOK();  //Une des portes n'a pas de pièces suivantes
+            if (!p.porteEstOK()){
+                return false; //Une des portes n'a pas de pièces suivantes
+            }
         }
         return true;
     }

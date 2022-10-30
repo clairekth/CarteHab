@@ -82,6 +82,57 @@ public class Piece implements Serializable {
         return murSud.murADesPortes() || murOuest.murADesPortes() || murEst.murADesPortes() || murNord.murADesPortes(); //Au moins un des murs à une porte
     }
 
+    public String erreurs(){
+        boolean portesPresentes = false;
+        StringBuilder sb = new StringBuilder();
+        if (murOuest == null){
+            sb.append("Il manque le mur Ouest.\n");
+        } else {
+            if (!murOuest.murEstOK()){
+                sb.append("Au moins un des portes du mur Ouest n'a pas de pièces suivantes.\n");
+            }
+            if (murOuest.murADesPortes()){
+                portesPresentes = true;
+            }
+        }
+        if (murEst == null){
+            sb.append("Il manque le mur Est.\n");
+        } else {
+            if (!murEst.murEstOK()){
+                sb.append("Au moins un des portes du mur Est n'a pas de pièces suivantes.\n");
+            }
+            if (murEst.murADesPortes()){
+                portesPresentes = true;
+            }
+        }
+        if (murNord == null){
+            sb.append("Il manque le mur Nord.\n");
+        }else {
+            if (!murNord.murEstOK()){
+                sb.append("Au moins un des portes du mur Nord n'a pas de pièces suivantes.\n");
+            }
+            if (murNord.murADesPortes()){
+                portesPresentes = true;
+            }
+        }
+        if (murSud == null){
+            sb.append("Il manque le mur Sud.\n");
+        } else {
+            if (!murSud.murEstOK()){
+                sb.append("Au moins un des portes du mur Sud n'a pas de pièces suivantes.\n");
+            }
+            if (murSud.murADesPortes()){
+                portesPresentes = true;
+            }
+        }
+
+        if (!portesPresentes){
+            sb.append("Il n'y a pas de portes dans la pièce.\n");
+        }
+
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         return "Piece{" +

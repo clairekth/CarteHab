@@ -1,6 +1,7 @@
 package com.example.cartehab.models;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ public class Porte implements Serializable {
         top = t;
         right = r;
         bottom = b;
+        pieceSuivante = null;
     }
 
     public void setPieceSuivante(Piece p){
@@ -59,6 +61,7 @@ public class Porte implements Serializable {
     }
 
     public boolean porteEstOK(){
+        Log.i("TEST","CC");
         return pieceSuivante != null;
     }
 

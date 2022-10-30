@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     private boolean dialogDismiss;
     protected TextView orientation;
     protected Button modification;
+    protected ImageButton attention;
 
 
     /**
@@ -91,6 +93,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     m = (Mur) result.getData().getSerializableExtra("Mur");
                     piece.setMur(m);
+                    if (piece.pieceEstOK()){
+                        attention.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
 
@@ -218,10 +223,28 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             }
         });
 
+        attention = findViewById(R.id.button_attention);
+        attention.setVisibility(View.INVISIBLE);
+
+
+
     }
 
     private void setPiece(Piece p){
         piece = p;
+        if (!piece.pieceEstOK()) {
+            attention.setVisibility(View.VISIBLE);
+            attention.setOnClickListener(view -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ModificationRoomActivity.this);
+                builder.setMessage(piece.erreurs());
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                AlertDialog alertErrorRoom = builder.create();
+                alertErrorRoom.show();
+            });
+        }
     }
 
     @Override

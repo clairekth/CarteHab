@@ -37,6 +37,8 @@
         app:layout_constraintBottom_toTopOf="@id/linearlayout"
         app:layout_constraintStart_toStartOf="parent"/>
 
+
+
     <ImageView
         android:id="@+id/compass"
         android:layout_width="50dp"
@@ -67,11 +69,25 @@
             android:id="@+id/modification_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="Modifier mur"
             />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/button_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/attention"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

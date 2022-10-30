@@ -12,7 +12,7 @@
         android:layout_width="150dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        android:textSize="15pt" />
+        android:textSize="13pt" />
 
     <ImageView
         android:id="@+id/imageView_error"
