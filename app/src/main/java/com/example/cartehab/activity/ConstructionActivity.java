@@ -42,6 +42,7 @@ public class ConstructionActivity extends AppCompatActivity {
     protected Habitation hab;
     protected ArrayList<String> listeHabitation;
     protected TextView nameHab;
+    protected String nomLastHab;
 
     final ActivityResultLauncher<Intent> launcherNewRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -65,7 +66,7 @@ public class ConstructionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_construction);
 
-        String nomLastHab = openListeHabitation();
+        nomLastHab = openListeHabitation();
         if (nomLastHab == null){
             hab = new Habitation();
             listeHabitation.add(hab.getName());
@@ -102,6 +103,7 @@ public class ConstructionActivity extends AppCompatActivity {
                 Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrées.", Toast.LENGTH_LONG).show();
             } else {
                 save();
+                saveListeHabitation(0);
                 AlertDialog d = alertOpenHabitation();
                 d.show();
             }
@@ -111,13 +113,13 @@ public class ConstructionActivity extends AppCompatActivity {
         Button saveB = findViewById(R.id.save);
         saveB.setOnClickListener(view ->{
             save();
-            saveListeHabitation();
+            saveListeHabitation(0);
         });
 
         Button newHabitation = findViewById(R.id.new_habitation);
         newHabitation.setOnClickListener(view -> {
             save();
-            saveListeHabitation();
+            saveListeHabitation(0);
             newHabitation();
         });
 
@@ -156,7 +158,7 @@ public class ConstructionActivity extends AppCompatActivity {
 
     }
 
-    public void saveListeHabitation(){
+    public void saveListeHabitation(int s){
         try {
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(openFileOutput("listehabitation.json", Context.MODE_PRIVATE)));
             writer.beginObject();
@@ -177,7 +179,10 @@ public class ConstructionActivity extends AppCompatActivity {
 
 
             writer.name("LAST_HAB");
-            if (listeHabitation.size() != 0){
+            if (s == 0){
+                writer.value(hab.getName());
+            }
+            if (s == 1){
                 writer.value(listeHabitation.get(listeHabitation.size() -1));
             }
             writer.endObject();
@@ -258,19 +263,14 @@ public class ConstructionActivity extends AppCompatActivity {
     public void supprimerHabitationEtOuvrirDerniereHabitation(){
         getApplicationContext().deleteFile(hab.getName()+".data");
         listeHabitation.remove(hab.getName());
-
-        String nomLastHab1 = null;
+        saveListeHabitation(1);
+        nomLastHab =  openListeHabitation();
         if (listeHabitation.size() != 0) { //Pas besoin de save ni de réouvrir la dernière hab si la liste est vide
-            saveListeHabitation();
-            nomLastHab1 = openListeHabitation();
-        }
-
-        if (nomLastHab1 == null){ //Il n'y a pas d'autres habitations enregistrées -> créer donc une nouvelle.
-            newHabitation();
+            open(nomLastHab);
+            nameHab.setText(hab.getName());
         } else {
-            open(nomLastHab1); //Ouvre la dernière habitation
+            newHabitation();
         }
-        nameHab.setText(hab.getName());
     }
 
     /**
@@ -318,21 +318,21 @@ public class ConstructionActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         save();
-        saveListeHabitation();
+        saveListeHabitation(0);
         super.onPause();
     }
 
     @Override
     public void onBackPressed(){
         save();
-        saveListeHabitation();
+        saveListeHabitation(0);
         super.onBackPressed();
     }
 
     @Override
     public void finish(){
         save();
-        saveListeHabitation();
+        saveListeHabitation(0);
         super.finish();
     }
 
