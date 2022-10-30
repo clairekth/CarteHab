@@ -158,6 +158,7 @@ public class ConstructionActivity extends AppCompatActivity {
 
     }
 
+
     public void saveListeHabitation(int s){
         try {
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(openFileOutput("listehabitation.json", Context.MODE_PRIVATE)));
@@ -179,10 +180,10 @@ public class ConstructionActivity extends AppCompatActivity {
 
 
             writer.name("LAST_HAB");
-            if (s == 0){
+            if (s == 0){ //Habitation actuelle
                 writer.value(hab.getName());
             }
-            if (s == 1){
+            if (s == 1){ //Habitation actuelle étant suppr, on mets en dernière habitation la dernière créée.
                 writer.value(listeHabitation.get(listeHabitation.size() -1));
             }
             writer.endObject();
