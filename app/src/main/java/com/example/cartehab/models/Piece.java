@@ -92,12 +92,16 @@ public class Piece implements Serializable {
                 for (Porte p : murOuest.getListePortes()){
                     if (p.porteEstOK() == 1){
                         sb.append("Au moins un des portes du mur Ouest n'a pas de pièces suivantes.\n");
+                        break;
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Est de " + p.getPieceSuivante().getNom() + "n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                        break;
                     } else if (p.porteEstOK() == 3){
                         sb.append("Aucune portes du mur Est de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom + "\n");
+                        break;
                     } else if (p.porteEstOK() == 4){
                         sb.append("Il n'y a pas de mur Est dans " + p.getPieceSuivante().getNom() +".\n");
+                        break;
                     }
                 }
             }
@@ -112,12 +116,16 @@ public class Piece implements Serializable {
                 for (Porte p : murEst.getListePortes()){
                     if (p.porteEstOK() == 1){
                         sb.append("Au moins un des portes du mur Est n'a pas de pièces suivantes.\n");
+                        break;
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Ouest de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                        break;
                     } else if (p.porteEstOK() == 3){
                         sb.append("Aucune portes du mur Ouest de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom +"\n");
+                        break;
                     }else if (p.porteEstOK() == 4){
                         sb.append("Il n'y a pas de mur Ouest dans " + p.getPieceSuivante().getNom() +".\n");
+                        break;
                     }
                 }
             }
@@ -132,12 +140,16 @@ public class Piece implements Serializable {
                 for (Porte p : murNord.getListePortes()){
                     if (p.porteEstOK() == 1){
                         sb.append("Au moins un des portes du mur Nord n'a pas de pièces suivantes.\n");
+                        break;
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Sud de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                        break;
                     } else if (p.porteEstOK() == 3){
                         sb.append("Aucune portes du mur Sud de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom + "\n");
+                        break;
                     }else if (p.porteEstOK() == 4){
                         sb.append("Il n'y a pas de mur Sud dans " + p.getPieceSuivante().getNom() +".\n");
+                        break;
                     }
                 }              }
             if (murNord.murADesPortes()){
@@ -151,12 +163,16 @@ public class Piece implements Serializable {
                 for (Porte p : murSud.getListePortes()){
                     if (p.porteEstOK() == 1){
                         sb.append("Au moins un des portes du mur Sud n'a pas de pièces suivantes.\n");
+                        break;
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Nord de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                        break;
                     } else if (p.porteEstOK() == 3){
                         sb.append("Aucune portes du mur Nord de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom +"\n");
+                        break;
                     }else if (p.porteEstOK() == 4){
                         sb.append("Il n'y a pas de mur Nord dans " + p.getPieceSuivante().getNom() +".\n");
+                        break;
                     }
                 }
             }
