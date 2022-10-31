@@ -28,53 +28,41 @@ public class Porte implements Serializable {
             /*Modifie automatiquement les portes de la pièce suivante*/
             if (p != null) {
                 if (mur.getOrientation().equals("N")) {
-                    if (p.getMurSud() != null) {
+                    if (p.getMurSud() != null && p.getMurNord().getListePortes().size() == 1) {
                         for (Porte po : p.getMurSud().getListePortes()) {
                             if (po.pieceSuivante == null) {
                                 po.setPieceSuivante(this.mur.getPiece());
                                 break;
                             }
-                            if (po.pieceSuivante.getId().equals(mur.getPiece().getId())) {
-                                po.setPieceSuivante(this.mur.getPiece());
-                            }
                         }
                     }
                 }
                 if (mur.getOrientation().equals("S")) {
-                    if (p.getMurNord() != null) {
+                    if (p.getMurNord() != null && p.getMurNord().getListePortes().size() == 1) {
                         for (Porte po : p.getMurNord().getListePortes()) {
                             if (po.pieceSuivante == null) {
                                 po.setPieceSuivante(this.mur.getPiece());
                                 break;
                             }
-                            if (po.pieceSuivante.getId().equals(mur.getPiece().getId())) {
-                                po.setPieceSuivante(this.mur.getPiece());
-                            }
                         }
                     }
                 }
                 if (mur.getOrientation().equals("E")) {
-                    if (p.getMurOuest() != null) {
+                    if (p.getMurOuest() != null && p.getMurOuest().getListePortes().size() == 1) {
                         for (Porte po : p.getMurOuest().getListePortes()) {
                             if (po.pieceSuivante == null) {
                                 po.setPieceSuivante(this.mur.getPiece());
                                 break;
                             }
-                            if (po.pieceSuivante.getId().equals(mur.getPiece().getId())) {
-                                po.setPieceSuivante(this.mur.getPiece());
-                            }
                         }
                     }
                 }
                 if (mur.getOrientation().equals("O")) {
-                    if (p.getMurEst() != null) {
+                    if (p.getMurEst() != null && p.getMurEst().getListePortes().size() == 1) {
                         for (Porte po : p.getMurEst().getListePortes()) {
                             if (po.pieceSuivante == null) {
                                 po.setPieceSuivante(this.mur.getPiece());
                                 break;
-                            }
-                            if (po.pieceSuivante.getId().equals(mur.getPiece().getId())) {
-                                po.setPieceSuivante(this.mur.getPiece());
                             }
                         }
                     }
@@ -121,10 +109,8 @@ public class Porte implements Serializable {
 
     public int porteEstOK(){
         if (pieceSuivante == null){
-            Log.i("PORTE","null");
             return 1;
         } else {
-            Log.i("PORTE", pieceSuivante.getNom());
             if (this.getMur().getOrientation().equals("N")){
                 if (pieceSuivante.getMurSud() == null){
                     return 4;

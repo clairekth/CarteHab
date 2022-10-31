@@ -21,12 +21,9 @@ public class Globals {
     }
 
     public void setmData(Mur m){
-        Log.i("GLOBALS", "SET");
         mData = m;
     }
     public Mur getmData(){
-        Log.i("GLOBALS", "GET");
-
         return mData;
     }
 

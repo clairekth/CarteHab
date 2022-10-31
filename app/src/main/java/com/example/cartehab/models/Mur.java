@@ -55,7 +55,6 @@ public class Mur implements Serializable {
     }
 
     public boolean murEstOK(){
-        Log.i("PORTE",this.toString());
         for (Porte p : listePortes){
             if (p.porteEstOK() != 0){
                 return false; //Une des portes a une erreur

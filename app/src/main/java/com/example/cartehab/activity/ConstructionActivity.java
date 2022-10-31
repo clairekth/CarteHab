@@ -174,7 +174,6 @@ public class ConstructionActivity extends AppCompatActivity {
             writer.name("LAST_HAB");
             if (s == 0){ //Habitation actuelle
                 writer.value(hab.getName());
-                Log.i("GLOBALs","YES");
             }
             if (s == 1){ //Habitation actuelle étant suppr, on mets en dernière habitation la dernière créée.
                 if (listeHabitation.size() != 0) {
