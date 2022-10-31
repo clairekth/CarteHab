@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonWriter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -20,7 +21,9 @@ import android.widget.Toast;
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Piece;
+import com.example.cartehab.models.Porte;
 import com.example.cartehab.outils.FabriqueNumero;
+import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogNameCustom;
 
 import org.json.JSONArray;
@@ -49,15 +52,18 @@ public class ConstructionActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Piece p = (Piece) result.getData().getSerializableExtra("Piece");
                     hab.addPiece(p);
+
                 }
             });
 
     final ActivityResultLauncher<Intent> launcherModificationRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Habitation h = (Habitation) result.getData().getSerializableExtra("Hab");
-                    hab = h;
+                    Piece p = (Piece) result.getData().getSerializableExtra("Piece");
+                    hab.remove(p);
+                    hab.addPiece(p);
                 }
+
             });
 
 
@@ -69,9 +75,10 @@ public class ConstructionActivity extends AppCompatActivity {
         nomLastHab = openListeHabitation();
         if (nomLastHab == null){
             hab = new Habitation();
+
             listeHabitation.add(hab.getName());
         } else {
-            open(nomLastHab);
+            hab = SaveManager.open(getApplicationContext(),nomLastHab);
         }
 
 
@@ -102,7 +109,7 @@ public class ConstructionActivity extends AppCompatActivity {
             if (listeHabitation.size() == 1){
                 Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrées.", Toast.LENGTH_LONG).show();
             } else {
-                save();
+                SaveManager.save(getApplicationContext(),hab);
                 saveListeHabitation(0);
                 AlertDialog d = alertOpenHabitation();
                 d.show();
@@ -112,13 +119,13 @@ public class ConstructionActivity extends AppCompatActivity {
 
         Button saveB = findViewById(R.id.save);
         saveB.setOnClickListener(view ->{
-            save();
+            SaveManager.save(getApplicationContext(),hab);
             saveListeHabitation(0);
         });
 
         Button newHabitation = findViewById(R.id.new_habitation);
         newHabitation.setOnClickListener(view -> {
-            save();
+            SaveManager.save(getApplicationContext(),hab);
             saveListeHabitation(0);
             newHabitation();
         });
@@ -129,35 +136,6 @@ public class ConstructionActivity extends AppCompatActivity {
 
         });
     }
-
-    public void save(){
-        FileOutputStream fos = null;
-        ObjectOutputStream o = null;
-        try {
-            fos = openFileOutput(hab.getName()+".data", MODE_PRIVATE);
-            o = new ObjectOutputStream(fos);
-            o.writeObject(hab);
-            o.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void open(String name){
-        try {
-            FileInputStream fis =  getApplicationContext().openFileInput(name + ".data");
-            ObjectInputStream o = new ObjectInputStream(fis);
-            hab = (Habitation) o.readObject();
-
-            o.close();
-            fis.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
     public void saveListeHabitation(int s){
         try {
@@ -248,7 +226,7 @@ public class ConstructionActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-                open(finalNoms[n]);
+                hab = SaveManager.open(getApplicationContext(),finalNoms[n]);
                 nameHab.setText(hab.getName());
             }
         });
@@ -278,8 +256,7 @@ public class ConstructionActivity extends AppCompatActivity {
             hab = new Habitation();
             listeHabitation.add(hab.getName());
         } else {
-            open(nomLastHab1);
-
+            hab = SaveManager.open(getApplicationContext(),nomLastHab1);
         }
         nameHab.setText(hab.getName());
     }
@@ -328,21 +305,21 @@ public class ConstructionActivity extends AppCompatActivity {
 
     @Override
     protected void onPause(){
-        save();
+        SaveManager.save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.onPause();
     }
 
     @Override
     public void onBackPressed(){
-        save();
+        SaveManager.save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.onBackPressed();
     }
 
     @Override
     public void finish(){
-        save();
+        SaveManager.save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.finish();
     }
