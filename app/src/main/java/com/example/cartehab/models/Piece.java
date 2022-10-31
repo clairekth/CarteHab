@@ -15,9 +15,8 @@ public class Piece implements Serializable {
     protected Mur murEst;
     protected Mur murOuest;
 
-    public Piece(Habitation h){
-        habitation = h;
-        id = h.getId() + "PI" + FabriqueNumero.getInstance().getNumeroPiece();
+    public Piece(String idHab){
+        id = idHab + "PI" + FabriqueNumero.getInstance().getNumeroPiece();
     }
 
     public Piece(Habitation h, String name, String i){
@@ -69,7 +68,7 @@ public class Piece implements Serializable {
         if (murEst == null || !murEst.murEstOK()){
             return false;
         }
-        if (murNord == null || !murEst.murEstOK()) {
+        if (murNord == null || !murNord.murEstOK()) {
             return false;
         }
         if (murOuest == null || !murOuest.murEstOK()){

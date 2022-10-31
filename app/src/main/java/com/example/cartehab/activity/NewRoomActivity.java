@@ -88,8 +88,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    m = (Mur) result.getData().getSerializableExtra("Mur");
-                    p.setMur(m);
+                    //m = (Mur) result.getData().getSerializableExtra("Mur");
+                    //p.setMur(m);
                     String nomH = result.getData().getStringExtra("Hab");
                     h = SaveManager.open(getApplicationContext(), nomH);
                 }
@@ -130,6 +130,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                         Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
                         intent.putExtra("Mur", m);
                         intent.putExtra("Hab",h.getName());
+                        //intent.putExtra("Hab", h);
+
                         launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
@@ -146,12 +148,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         setContentView(R.layout.activity_new_room);
         Intent i = getIntent();
         String nomH = i.getStringExtra("Hab");
-        Log.i("Cons2", nomH);
-
         h = SaveManager.open(getApplicationContext(), nomH);
-        Log.i("ConsNewRoom2", h.toString());
-
-        p = new Piece(h);
+        //h = (Habitation) i.getSerializableExtra("hab");
+        p = new Piece(h.getId());
 
         TextView roomName = findViewById(R.id.room_name);
         DialogNameCustom.FullNameListener listener = new DialogNameCustom.FullNameListener() {
@@ -342,10 +341,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         sensorManager.unregisterListener(NewRoomActivity.this);
         h.addPiece(p);
         SaveManager.save(getApplicationContext(),h);
-        Log.i("ConsNewRoom", h.toString());
 
         Intent data = new Intent();
         data.putExtra("Hab", h.getName());
+        //data.putExtra("Piece", p);
+
         setResult(RESULT_OK, data);
         finish();
         super.onBackPressed();

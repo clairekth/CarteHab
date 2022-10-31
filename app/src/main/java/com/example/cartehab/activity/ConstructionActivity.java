@@ -52,6 +52,8 @@ public class ConstructionActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     String nomH = result.getData().getStringExtra("Hab");
                     hab = SaveManager.open(getApplicationContext(), nomH);
+                    //Piece p = (Piece) result.getData().getSerializableExtra("Piece");
+                    //hab.addPiece(p);
                 }
             });
 
@@ -60,7 +62,8 @@ public class ConstructionActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     String nomH = result.getData().getStringExtra("Hab");
                     hab = SaveManager.open(getApplicationContext(), nomH);
-                    Log.i("ModifA", hab.toString());
+                    //Habitation h = (Habitation) result.getData().getSerializableExtra("Hab");
+                    //hab = h;
                 }
 
             });
@@ -77,6 +80,11 @@ public class ConstructionActivity extends AppCompatActivity {
             listeHabitation.add(hab.getName());
         } else {
             hab = SaveManager.open(getApplicationContext(),nomLastHab);
+            if (hab == null){
+                hab = new Habitation();
+                listeHabitation.add(hab.getName());
+                Toast.makeText(ConstructionActivity.this,"Impossible de récupérer la dernière habitation. Une erreur a eu lieu.", Toast.LENGTH_LONG).show();
+            }
         }
 
 
@@ -88,6 +96,7 @@ public class ConstructionActivity extends AppCompatActivity {
         newRoom.setOnClickListener(view -> {
             Intent intent = new Intent(ConstructionActivity.this, NewRoomActivity.class);
             intent.putExtra("Hab",hab.getName());
+            //intent.putExtra("hab",hab);
             launcherNewRoom.launch(intent);
         });
 
@@ -98,6 +107,7 @@ public class ConstructionActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(ConstructionActivity.this, ModificationRoomActivity.class);
                 intent.putExtra("Hab", hab.getName());
+                //intent.putExtra("hab",hab);
                 launcherModificationRoom.launch(intent);
             }
         });
@@ -211,7 +221,6 @@ public class ConstructionActivity extends AppCompatActivity {
         hab = new Habitation();
         nameHab.setText(hab.getName());
         listeHabitation.add(hab.getName());
-        Log.i("Fabr","resetNew");
         FabriqueNumero.getInstance().resetCompteurPiece();
     }
 
@@ -254,7 +263,6 @@ public class ConstructionActivity extends AppCompatActivity {
         if (nomLastHab1 == null){
             hab = new Habitation();
             listeHabitation.add(hab.getName());
-            Log.i("Fabr","resetSup");
             FabriqueNumero.getInstance().resetCompteurPiece();
         } else {
             hab = SaveManager.open(getApplicationContext(),nomLastHab1);

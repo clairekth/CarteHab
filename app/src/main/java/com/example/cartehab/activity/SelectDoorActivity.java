@@ -91,6 +91,8 @@ public class SelectDoorActivity extends AppCompatActivity {
         Intent i= getIntent();
         String nomH = i.getStringExtra("Hab");
         m = (Mur) i.getSerializableExtra("Mur");
+        //hab = (Habitation) i.getSerializableExtra("Hab");
+
         hab = SaveManager.open(getApplicationContext(), nomH);
 
         ImageView image = findViewById(R.id.im_selectActivity);
@@ -211,7 +213,9 @@ public class SelectDoorActivity extends AppCompatActivity {
     @Override
     public void finish() {
         Intent data = new Intent();
-        data.putExtra("Mur", m);
+        m.getPiece().setMur(m);
+        //data.putExtra("Mur", m);
+        SaveManager.save(getApplicationContext(),hab);
         data.putExtra("Hab",hab.getName());
         setResult(RESULT_OK, data);
         super.finish();

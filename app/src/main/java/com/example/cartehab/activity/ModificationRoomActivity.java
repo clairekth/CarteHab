@@ -95,8 +95,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    m = (Mur) result.getData().getSerializableExtra("Mur");
-                    piece.setMur(m);
+                    //m = (Mur) result.getData().getSerializableExtra("Mur");
+                    //piece.setMur(m);
                     String nomH = result.getData().getStringExtra("Hab");
                     hab = SaveManager.open(getApplicationContext(), nomH);
                     if (piece.pieceEstOK()){
@@ -139,6 +139,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
                         Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                         intent.putExtra("Mur",m);
+                        //intent.putExtra("Hab", hab);
                         intent.putExtra("Hab", hab.getName());
                         launcherSelectDoor.launch(intent);
 
@@ -156,6 +157,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         Intent i= getIntent();
         String nomHab = i.getStringExtra("Hab");
         hab = SaveManager.open(getApplicationContext(),nomHab);
+        //hab = (Habitation) i.getSerializableExtra("hab");
         pieceASuppr = false;
 
         roomName = findViewById(R.id.room_name);
@@ -228,6 +230,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                 intent.putExtra("Mur",m);
                 intent.putExtra("Hab", hab.getName());
+                //intent.putExtra("Hab", hab);
                 launcherSelectDoor.launch(intent);
             }
         });
@@ -462,13 +465,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         hab.remove(piece);
         hab.addPiece(piece);
         SaveManager.save(getApplicationContext(),hab);
-        Log.i("Modif", hab.toString());
         Intent data = new Intent();
         data.putExtra("Hab", hab.getName());
+        data.putExtra("Hab", hab);
 
         setResult(RESULT_OK, data);
 
-        finish();
         super.onBackPressed();
     }
 
