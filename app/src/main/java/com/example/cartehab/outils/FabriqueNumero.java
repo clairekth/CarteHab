@@ -1,5 +1,7 @@
 package com.example.cartehab.outils;
 
+import android.util.Log;
+
 public class FabriqueNumero {
 
     private static final FabriqueNumero instance = new FabriqueNumero();
@@ -35,11 +37,16 @@ public class FabriqueNumero {
         return cptHabitation;
     }
 
+    public int getNumeroPieceSansIncre(){
+        return cptPiece;
+    }
+
     public void setCptHabitation(int i ){
         cptHabitation = i;
     }
 
     public void setCptPiece(int i ){
         cptPiece = i;
+
     }
 }

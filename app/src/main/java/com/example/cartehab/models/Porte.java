@@ -19,20 +19,63 @@ public class Porte implements Serializable {
         pieceSuivante = null;
     }
 
-    public void setPieceSuivante(Piece p){
+    public void setPieceSuivante(Piece p) {
         pieceSuivante = p;
+
+        /*Modifie automatiquement les portes de la pièce suivante*/
+        /*if (p != null) {
+            if (mur.getOrientation().equals("N")) {
+                if (p.getMurSud() != null) {
+                    for (Porte po : p.getMurSud().getListePortes()) {
+                        if (po.pieceSuivante == null) {
+                            po.setPieceSuivante(this.mur.getPiece());
+                            break;
+                        }
+                    }
+                }
+            }
+            if (mur.getOrientation().equals("S")) {
+                if (p.getMurNord() != null) {
+                    for (Porte po : p.getMurNord().getListePortes()) {
+                        if (po.pieceSuivante == null) {
+                            po.setPieceSuivante(this.mur.getPiece());
+                            break;
+                        }
+                    }
+                }
+            }
+            if (mur.getOrientation().equals("E")) {
+                if (p.getMurOuest() != null) {
+                    for (Porte po : p.getMurOuest().getListePortes()) {
+                        if (po.pieceSuivante == null) {
+                            po.setPieceSuivante(this.mur.getPiece());
+                            break;
+                        }
+                    }
+                }
+            }
+            if (mur.getOrientation().equals("O")) {
+                if (p.getMurEst() != null) {
+                    for (Porte po : p.getMurEst().getListePortes()) {
+                        if (po.pieceSuivante == null) {
+                            po.setPieceSuivante(this.mur.getPiece());
+                            break;
+                        }
+                    }
+                }
+            }
+        }*/
+
     }
 
     @Override
     public String toString() {
+        if (pieceSuivante == null){
+            return "Porte{pieceSuivante=null";
+        }
         return "Porte{" +
-                ", left=" + left +
-                ", top=" + top +
-                ", right=" + right +
-                ", bottom=" + bottom +
-                ", mur=" + mur +
-                ", pieceSuivante=" + pieceSuivante +
-                '}';
+                "pieceSuivante=" + pieceSuivante +
+                "}\n";
     }
 
     public Piece getPieceSuivante(){
@@ -102,7 +145,6 @@ public class Porte implements Serializable {
                     int liee = 3;
                     Piece p = this.getMur().getPiece();
                     for (Porte pS : pieceSuivante.getMurEst().getListePortes()) {
-                        Log.i("Dia", pS.toString());
                         if (pS.pieceSuivante != null) {
                             if (pS.pieceSuivante.getId().equals(p.getId())) {
                                 liee = 0;
@@ -118,7 +160,6 @@ public class Porte implements Serializable {
                     int liee = 3;
                     Piece p = this.getMur().getPiece();
                     for (Porte pS : pieceSuivante.getMurOuest().getListePortes()) {
-                        Log.i("Dia", pS.toString());
                         if (pS.pieceSuivante != null) {
                             if (pS.pieceSuivante.getId().equals(p.getId())) {
                                 liee = 0;

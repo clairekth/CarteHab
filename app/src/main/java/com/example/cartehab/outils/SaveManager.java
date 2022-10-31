@@ -3,6 +3,7 @@ package com.example.cartehab.outils;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.cartehab.models.Habitation;
 

@@ -13,6 +13,7 @@ public class Habitation implements Serializable {
     protected String id;
     protected HashMap<String, Piece> listePieces;
     protected String name;
+    protected int lastNumPiece;
 
     public Habitation(){
         listePieces = new HashMap<>();
@@ -20,7 +21,12 @@ public class Habitation implements Serializable {
         name = id;
     }
 
-
+    public void setLastNumPiece(int i){
+        lastNumPiece = i;
+    }
+    public int getLastNumPiece(){
+        return lastNumPiece;
+    }
     public void addPiece(Piece p){
         listePieces.put(p.getId(), p);
     }

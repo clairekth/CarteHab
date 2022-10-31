@@ -96,7 +96,7 @@ public class Piece implements Serializable {
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Est de " + p.getPieceSuivante().getNom() + "n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
                     } else if (p.porteEstOK() == 3){
-                        sb.append("Aucune portes du mur Est de " + p.getPieceSuivante().getNom() + " n'a de portes reliant " + this.nom + "\n");
+                        sb.append("Aucune portes du mur Est de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom + "\n");
                     }
                 }
             }
@@ -114,7 +114,7 @@ public class Piece implements Serializable {
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Ouest de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
                     } else if (p.porteEstOK() == 3){
-                        sb.append("Aucune portes du mur Ouest de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom +"\n");
+                        sb.append("Aucune portes du mur Ouest de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom +"\n");
                     }
                 }
             }
@@ -130,9 +130,9 @@ public class Piece implements Serializable {
                     if (p.porteEstOK() == 1){
                         sb.append("Au moins un des portes du mur Nord n'a pas de pièces suivantes.\n");
                     } else if (p.porteEstOK() == 2){
-                        sb.append("Le mur Sud de " + p.getPieceSuivante().getNom() + "n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
+                        sb.append("Le mur Sud de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
                     } else if (p.porteEstOK() == 3){
-                        sb.append("Aucune portes du mur Sud de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom + "\n");
+                        sb.append("Aucune portes du mur Sud de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom + "\n");
                     }
                 }              }
             if (murNord.murADesPortes()){
@@ -149,7 +149,7 @@ public class Piece implements Serializable {
                     } else if (p.porteEstOK() == 2){
                         sb.append("Le mur Nord de " + p.getPieceSuivante().getNom() + " n'a pas de portes. " + this.nom + " et " +p.getPieceSuivante().getNom() + " ne ont donc pas reliées.\n");
                     } else if (p.porteEstOK() == 3){
-                        sb.append("Aucune portes du mur Nord de " + p.getPieceSuivante().getNom() + "n'a de portes reliant " + this.nom +"\n");
+                        sb.append("Aucune portes du mur Nord de " + p.getPieceSuivante().getNom() + " ne relie " + this.nom +"\n");
                     }
                 }
             }
@@ -172,9 +172,9 @@ public class Piece implements Serializable {
         return "Piece{" +
                 ", nom='" + nom + '\'' +
                 ", murNord=" + murNord +
-                ", murSud=" + murSud +
-                ", murEst=" + murEst +
-                ", murOuest=" + murOuest +
-                '}';
+                ",\n murSud=" + murSud +
+                ",\n murEst=" + murEst +
+                ",\n murOuest=" + murOuest +
+                "}\n";
     }
 }

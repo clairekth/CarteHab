@@ -28,10 +28,10 @@ public class Mur implements Serializable {
     public String toString() {
         return "Mur{" +
                 "id='" + id + '\'' +
-                ", piece=" + piece.getId() +
+                ", piece=" + piece.getNom() +
                 ", orientation='" + orientation + '\'' +
-                ", listePortes" + listePortes.size() +
-                '}';
+                ", listePortes" + listePortes +
+                "}\n";
     }
 
     public Piece getPiece(){
