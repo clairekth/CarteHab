@@ -109,6 +109,9 @@ public class Porte implements Serializable {
             return 1;
         } else {
             if (this.getMur().getOrientation().equals("N")){
+                if (pieceSuivante.getMurSud() == null){
+                    return 4;
+                }
                 if (pieceSuivante.getMurSud().getListePortes().size() == 0){
                     return 2;
                 } else {
@@ -124,6 +127,9 @@ public class Porte implements Serializable {
                     return liee;
                 }
             } else if (this.getMur().getOrientation().equals("S")){
+                if (pieceSuivante.getMurNord() == null){
+                    return 4;
+                }
                 if (pieceSuivante.getMurNord().getListePortes().size() == 0){
                     return 2;
                 } else {
@@ -139,6 +145,9 @@ public class Porte implements Serializable {
                     return liee;
                 }
             }else if (this.getMur().getOrientation().equals("O")) {
+                if (pieceSuivante.getMurEst() == null){
+                    return 4;
+                }
                 if (pieceSuivante.getMurEst().getListePortes().size() == 0) {
                     return 2;
                 } else {
@@ -154,6 +163,9 @@ public class Porte implements Serializable {
                     return liee;
                 }
             } else if (this.getMur().getOrientation().equals("E")){
+                if (pieceSuivante.getMurOuest() == null){
+                    return 4;
+                }
                 if (pieceSuivante.getMurOuest().getListePortes().size() == 0) {
                     return 2;
                 } else {

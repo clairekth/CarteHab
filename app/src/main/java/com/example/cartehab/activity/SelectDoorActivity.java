@@ -26,6 +26,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogChooseRoomNext;
 import com.example.cartehab.view.DialogNameCustom;
 
@@ -88,8 +89,9 @@ public class SelectDoorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_door);
         Intent i= getIntent();
+        String nomH = i.getStringExtra("Hab");
         m = (Mur) i.getSerializableExtra("Mur");
-        hab = (Habitation) i.getSerializableExtra("Hab");
+        hab = SaveManager.open(getApplicationContext(), nomH);
 
         ImageView image = findViewById(R.id.im_selectActivity);
         Button delete = (Button) findViewById(R.id.delete_button);
@@ -210,6 +212,7 @@ public class SelectDoorActivity extends AppCompatActivity {
     public void finish() {
         Intent data = new Intent();
         data.putExtra("Mur", m);
+        data.putExtra("Hab",hab.getName());
         setResult(RESULT_OK, data);
         super.finish();
     }

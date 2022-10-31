@@ -19,6 +19,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.AdapterListRoom;
 import com.example.cartehab.view.DialogNameCustom;
 
@@ -57,6 +59,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     protected TextView orientation;
     protected Button modification;
     protected ImageButton attention;
+    protected boolean pieceASuppr;
 
 
     /**
@@ -94,6 +97,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     m = (Mur) result.getData().getSerializableExtra("Mur");
                     piece.setMur(m);
+                    String nomH = result.getData().getStringExtra("Hab");
+                    hab = SaveManager.open(getApplicationContext(), nomH);
                     if (piece.pieceEstOK()){
                         attention.setVisibility(View.INVISIBLE);
                     }
@@ -130,10 +135,11 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
+                        SaveManager.save(getApplicationContext(),hab);
 
                         Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                         intent.putExtra("Mur",m);
-                        intent.putExtra("Hab", hab);
+                        intent.putExtra("Hab", hab.getName());
                         launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
@@ -148,7 +154,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modification_room);
         Intent i= getIntent();
-        hab = (Habitation) i.getSerializableExtra("hab");
+        String nomHab = i.getStringExtra("Hab");
+        hab = SaveManager.open(getApplicationContext(),nomHab);
+        pieceASuppr = false;
 
         roomName = findViewById(R.id.room_name);
         listeButtonPorte = new ArrayList<>();
@@ -451,9 +459,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
+        SaveManager.save(getApplicationContext(),hab);
         Intent data = new Intent();
-        data.putExtra("Hab", hab);
+        data.putExtra("Hab", hab.getName());
+
         setResult(RESULT_OK, data);
+
         finish();
         super.onBackPressed();
     }
@@ -461,9 +472,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     protected void onPause(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
-        Intent data = new Intent();
+        /*Intent data = new Intent();
         data.putExtra("Hab", hab);
-        setResult(RESULT_OK, data);
+        setResult(RESULT_OK, data);*/
         super.onPause();
     }
 
@@ -476,11 +487,11 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     @Override
     public void finish() {
-        Intent data = new Intent();
-
+        sensorManager.unregisterListener(ModificationRoomActivity.this);
+        /*Intent data = new Intent();
         data.putExtra("Hab", hab);
         setResult(RESULT_OK, data);
-
+*/
         super.finish();
     }
 

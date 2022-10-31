@@ -41,10 +41,8 @@ public class AdapterListRoom extends ArrayAdapter<Piece> {
         ImageView imError = (ImageView) roomItemView.findViewById(R.id.imageView_error);
         if (listePieces.get(position).pieceEstOK()){
             imError.setVisibility(View.INVISIBLE);
-            Log.i("TEST","INV");
         } else {
             imError.setVisibility(View.VISIBLE);
-            Log.i("TEST","VIS");
         }
         return roomItemView;
 

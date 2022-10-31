@@ -50,18 +50,17 @@ public class ConstructionActivity extends AppCompatActivity {
     final ActivityResultLauncher<Intent> launcherNewRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Piece p = (Piece) result.getData().getSerializableExtra("Piece");
-                    hab.addPiece(p);
-
+                    String nomH = result.getData().getStringExtra("Hab");
+                    hab = SaveManager.open(getApplicationContext(), nomH);
                 }
             });
 
     final ActivityResultLauncher<Intent> launcherModificationRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Piece p = (Piece) result.getData().getSerializableExtra("Piece");
-                    hab.remove(p);
-                    hab.addPiece(p);
+                    String nomH = result.getData().getStringExtra("Hab");
+                    hab = SaveManager.open(getApplicationContext(), nomH);
+
                 }
 
             });
@@ -75,7 +74,6 @@ public class ConstructionActivity extends AppCompatActivity {
         nomLastHab = openListeHabitation();
         if (nomLastHab == null){
             hab = new Habitation();
-
             listeHabitation.add(hab.getName());
         } else {
             hab = SaveManager.open(getApplicationContext(),nomLastHab);
@@ -89,7 +87,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button newRoom = (Button) findViewById(R.id.new_room);
         newRoom.setOnClickListener(view -> {
             Intent intent = new Intent(ConstructionActivity.this, NewRoomActivity.class);
-            intent.putExtra("hab",hab);
+            intent.putExtra("Hab",hab.getName());
             launcherNewRoom.launch(intent);
         });
 
@@ -99,7 +97,7 @@ public class ConstructionActivity extends AppCompatActivity {
                 Toast.makeText(ConstructionActivity.this, "Il n'y a pas de pièces de créées.", Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ConstructionActivity.this, ModificationRoomActivity.class);
-                intent.putExtra("hab", hab);
+                intent.putExtra("Hab", hab.getName());
                 launcherModificationRoom.launch(intent);
             }
         });
@@ -213,6 +211,7 @@ public class ConstructionActivity extends AppCompatActivity {
         hab = new Habitation();
         nameHab.setText(hab.getName());
         listeHabitation.add(hab.getName());
+        Log.i("Fabr","resetNew");
         FabriqueNumero.getInstance().resetCompteurPiece();
     }
 
@@ -255,6 +254,8 @@ public class ConstructionActivity extends AppCompatActivity {
         if (nomLastHab1 == null){
             hab = new Habitation();
             listeHabitation.add(hab.getName());
+            Log.i("Fabr","resetSup");
+            FabriqueNumero.getInstance().resetCompteurPiece();
         } else {
             hab = SaveManager.open(getApplicationContext(),nomLastHab1);
         }

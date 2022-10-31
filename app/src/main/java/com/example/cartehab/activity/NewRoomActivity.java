@@ -28,6 +28,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogNameCustom;
 
 import java.io.FileInputStream;
@@ -89,6 +90,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     m = (Mur) result.getData().getSerializableExtra("Mur");
                     p.setMur(m);
+                    String nomH = result.getData().getStringExtra("Hab");
+                    h = SaveManager.open(getApplicationContext(), nomH);
                 }
             });
 
@@ -122,10 +125,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
+                        SaveManager.save(getApplicationContext(),h);
 
                         Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
-                        intent.putExtra("Mur",m);
-                        intent.putExtra("Hab", h);
+                        intent.putExtra("Mur", m);
+                        intent.putExtra("Hab",h.getName());
                         launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
@@ -141,7 +145,12 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_room);
         Intent i = getIntent();
-        h = (Habitation) i.getSerializableExtra("hab");
+        String nomH = i.getStringExtra("Hab");
+        Log.i("Cons2", nomH);
+
+        h = SaveManager.open(getApplicationContext(), nomH);
+        Log.i("ConsNewRoom2", h.toString());
+
         p = new Piece(h);
 
         TextView roomName = findViewById(R.id.room_name);
@@ -331,8 +340,12 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(NewRoomActivity.this);
+        h.addPiece(p);
+        SaveManager.save(getApplicationContext(),h);
+        Log.i("ConsNewRoom", h.toString());
+
         Intent data = new Intent();
-        data.putExtra("Piece", p);
+        data.putExtra("Hab", h.getName());
         setResult(RESULT_OK, data);
         finish();
         super.onBackPressed();
@@ -341,9 +354,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     @Override
     protected void onPause(){
         sensorManager.unregisterListener(NewRoomActivity.this);
-        Intent data = new Intent();
-        data.putExtra("Piece", p);
-        setResult(RESULT_OK, data);
+
         super.onPause();
     }
 
@@ -356,9 +367,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void finish() {
-        Intent data = new Intent();
-        data.putExtra("Piece", p);
-        setResult(RESULT_OK, data);
+
         super.finish();
     }
 }
