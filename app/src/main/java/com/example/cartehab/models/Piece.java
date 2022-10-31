@@ -172,7 +172,52 @@ public class Piece implements Serializable {
         return sb.toString();
     }
 
-
+    public void suppressionSiEstUnePieceSuivante(){
+        if (murSud != null){
+            for (Porte p : murSud.getListePortes()){
+                if (p.pieceSuivante != null){
+                    for (Porte p2 : p.pieceSuivante.getMurNord().getListePortes()){
+                        if (p2.pieceSuivante.getId().equals(id)){
+                            p2.setPieceSuivante(null);
+                        }
+                    }
+                }
+            }
+        }
+        if (murNord != null){
+            for (Porte p : murNord.getListePortes()){
+                if (p.pieceSuivante != null){
+                    for (Porte p2 : p.pieceSuivante.getMurSud().getListePortes()){
+                        if (p2.pieceSuivante.getId().equals(id)){
+                            p2.setPieceSuivante(null);
+                        }
+                    }
+                }
+            }
+        }
+        if (murEst != null){
+            for (Porte p : murEst.getListePortes()){
+                if (p.pieceSuivante != null){
+                    for (Porte p2 : p.pieceSuivante.getMurOuest().getListePortes()){
+                        if (p2.pieceSuivante.getId().equals(id)){
+                            p2.setPieceSuivante(null);
+                        }
+                    }
+                }
+            }
+        }
+        if (murOuest != null){
+            for (Porte p : murOuest.getListePortes()){
+                if (p.pieceSuivante != null){
+                    for (Porte p2 : p.pieceSuivante.getMurEst().getListePortes()){
+                        if (p2.pieceSuivante.getId().equals(id)){
+                            p2.setPieceSuivante(null);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public String toString() {

@@ -459,6 +459,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 dialog.show();
                 return true;
             case R.id.delete_piece:
+                piece.suppressionSiEstUnePieceSuivante();
                 hab.remove(piece);
                 finish();
             default:
