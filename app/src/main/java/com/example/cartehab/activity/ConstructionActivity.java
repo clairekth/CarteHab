@@ -60,7 +60,7 @@ public class ConstructionActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     String nomH = result.getData().getStringExtra("Hab");
                     hab = SaveManager.open(getApplicationContext(), nomH);
-
+                    Log.i("ModifA", hab.toString());
                 }
 
             });

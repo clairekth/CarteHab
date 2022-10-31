@@ -227,7 +227,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             } else {
                 Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                 intent.putExtra("Mur",m);
-                intent.putExtra("Hab", hab);
+                intent.putExtra("Hab", hab.getName());
                 launcherSelectDoor.launch(intent);
             }
         });
@@ -459,7 +459,10 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
+        hab.remove(piece);
+        hab.addPiece(piece);
         SaveManager.save(getApplicationContext(),hab);
+        Log.i("Modif", hab.toString());
         Intent data = new Intent();
         data.putExtra("Hab", hab.getName());
 
@@ -488,10 +491,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     public void finish() {
         sensorManager.unregisterListener(ModificationRoomActivity.this);
-        /*Intent data = new Intent();
-        data.putExtra("Hab", hab);
+        SaveManager.save(getApplicationContext(),hab);
+
+        Intent data = new Intent();
+        data.putExtra("Hab", hab.getName());
         setResult(RESULT_OK, data);
-*/
+
         super.finish();
     }
 

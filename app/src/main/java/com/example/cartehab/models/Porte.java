@@ -23,13 +23,16 @@ public class Porte implements Serializable {
         pieceSuivante = p;
 
         /*Modifie automatiquement les portes de la pièce suivante*/
-        /*if (p != null) {
+        if (p != null) {
             if (mur.getOrientation().equals("N")) {
                 if (p.getMurSud() != null) {
                     for (Porte po : p.getMurSud().getListePortes()) {
                         if (po.pieceSuivante == null) {
                             po.setPieceSuivante(this.mur.getPiece());
                             break;
+                        }
+                        if (po.pieceSuivante.getId().equals(mur.getPiece().getId())){
+                            po.setPieceSuivante(this.mur.getPiece());
                         }
                     }
                 }
@@ -41,6 +44,9 @@ public class Porte implements Serializable {
                             po.setPieceSuivante(this.mur.getPiece());
                             break;
                         }
+                        if (po.pieceSuivante.getId().equals(mur.getPiece().getId())){
+                            po.setPieceSuivante(this.mur.getPiece());
+                        }
                     }
                 }
             }
@@ -50,6 +56,9 @@ public class Porte implements Serializable {
                         if (po.pieceSuivante == null) {
                             po.setPieceSuivante(this.mur.getPiece());
                             break;
+                        }
+                        if (po.pieceSuivante.getId().equals(mur.getPiece().getId())){
+                            po.setPieceSuivante(this.mur.getPiece());
                         }
                     }
                 }
@@ -61,10 +70,13 @@ public class Porte implements Serializable {
                             po.setPieceSuivante(this.mur.getPiece());
                             break;
                         }
+                        if (po.pieceSuivante.getId().equals(mur.getPiece().getId())){
+                            po.setPieceSuivante(this.mur.getPiece());
+                        }
                     }
                 }
             }
-        }*/
+        }
 
     }
 
