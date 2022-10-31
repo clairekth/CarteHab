@@ -28,6 +28,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogNameCustom;
 
@@ -90,8 +91,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     //m = (Mur) result.getData().getSerializableExtra("Mur");
                     //p.setMur(m);
-                    String nomH = result.getData().getStringExtra("Hab");
-                    h = SaveManager.open(getApplicationContext(), nomH);
+                    //String nomH = result.getData().getStringExtra("Hab");
+                    //h = SaveManager.open(getApplicationContext(), nomH);
+                    h = Globals.getInstance().getDataHabitation();
                 }
             });
 
@@ -125,11 +127,12 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
-                        SaveManager.save(getApplicationContext(),h);
-
+                        //SaveManager.save(getApplicationContext(),h);
+                        Globals.getInstance().setDataHabitation(h);
+                        Globals.getInstance().setmData(m);
                         Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
-                        intent.putExtra("Mur", m);
-                        intent.putExtra("Hab",h.getName());
+                        //intent.putExtra("Mur", m);
+                        //intent.putExtra("Hab",h.getName());
                         //intent.putExtra("Hab", h);
 
                         launcherSelectDoor.launch(intent);
@@ -147,9 +150,10 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_room);
         Intent i = getIntent();
-        String nomH = i.getStringExtra("Hab");
-        h = SaveManager.open(getApplicationContext(), nomH);
+        //String nomH = i.getStringExtra("Hab");
+        //h = SaveManager.open(getApplicationContext(), nomH);
         //h = (Habitation) i.getSerializableExtra("hab");
+        h = Globals.getInstance().getDataHabitation();
         p = new Piece(h.getId());
 
         TextView roomName = findViewById(R.id.room_name);
@@ -340,10 +344,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
     public void onBackPressed(){
         sensorManager.unregisterListener(NewRoomActivity.this);
         h.addPiece(p);
-        SaveManager.save(getApplicationContext(),h);
+        //SaveManager.save(getApplicationContext(),h);
+        Globals.getInstance().setDataHabitation(h);
 
         Intent data = new Intent();
-        data.putExtra("Hab", h.getName());
+        //data.putExtra("Hab", h.getName());
         //data.putExtra("Piece", p);
 
         setResult(RESULT_OK, data);

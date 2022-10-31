@@ -90,7 +90,7 @@ public class Porte implements Serializable {
             return "Porte{pieceSuivante=null";
         }
         return "Porte{" +
-                "pieceSuivante=" + pieceSuivante +
+                "pieceSuivante=" + pieceSuivante.getNom() +
                 "}\n";
     }
 

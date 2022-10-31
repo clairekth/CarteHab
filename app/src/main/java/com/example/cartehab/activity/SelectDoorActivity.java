@@ -26,6 +26,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
+import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogChooseRoomNext;
 import com.example.cartehab.view.DialogNameCustom;
@@ -88,12 +89,14 @@ public class SelectDoorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_door);
-        Intent i= getIntent();
-        String nomH = i.getStringExtra("Hab");
-        m = (Mur) i.getSerializableExtra("Mur");
+        Intent i = getIntent();
+        //String nomH = i.getStringExtra("Hab");
+        //m = (Mur) i.getSerializableExtra("Mur");
         //hab = (Habitation) i.getSerializableExtra("Hab");
-
-        hab = SaveManager.open(getApplicationContext(), nomH);
+        //hab = SaveManager.open(getApplicationContext(), nomH);
+        hab = Globals.getInstance().getDataHabitation();
+        m = Globals.getInstance().getmData();
+        //Globals.getInstance().setmData(null);
 
         ImageView image = findViewById(R.id.im_selectActivity);
         Button delete = (Button) findViewById(R.id.delete_button);
@@ -215,8 +218,9 @@ public class SelectDoorActivity extends AppCompatActivity {
         Intent data = new Intent();
         m.getPiece().setMur(m);
         //data.putExtra("Mur", m);
-        SaveManager.save(getApplicationContext(),hab);
-        data.putExtra("Hab",hab.getName());
+        //SaveManager.save(getApplicationContext(),hab);
+        //data.putExtra("Hab",hab.getName());
+        Globals.getInstance().setDataHabitation(hab);
         setResult(RESULT_OK, data);
         super.finish();
     }

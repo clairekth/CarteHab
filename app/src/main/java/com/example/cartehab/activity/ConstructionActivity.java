@@ -23,6 +23,7 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.outils.FabriqueNumero;
+import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogNameCustom;
 
@@ -50,20 +51,22 @@ public class ConstructionActivity extends AppCompatActivity {
     final ActivityResultLauncher<Intent> launcherNewRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    String nomH = result.getData().getStringExtra("Hab");
-                    hab = SaveManager.open(getApplicationContext(), nomH);
+                    //String nomH = result.getData().getStringExtra("Hab");
+                    //hab = SaveManager.open(getApplicationContext(), nomH);
                     //Piece p = (Piece) result.getData().getSerializableExtra("Piece");
                     //hab.addPiece(p);
+                    hab = Globals.getInstance().getDataHabitation();
                 }
             });
 
     final ActivityResultLauncher<Intent> launcherModificationRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    String nomH = result.getData().getStringExtra("Hab");
-                    hab = SaveManager.open(getApplicationContext(), nomH);
+                    //String nomH = result.getData().getStringExtra("Hab");
+                    //hab = SaveManager.open(getApplicationContext(), nomH);
                     //Habitation h = (Habitation) result.getData().getSerializableExtra("Hab");
                     //hab = h;
+                    hab = Globals.getInstance().getDataHabitation();
                 }
 
             });
@@ -88,6 +91,9 @@ public class ConstructionActivity extends AppCompatActivity {
         }
 
 
+        Globals.getInstance().setDataHabitation(hab);
+
+
         nameHab = findViewById(R.id.nom_hab);
         nameHab.setText(hab.getName());
 
@@ -95,7 +101,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button newRoom = (Button) findViewById(R.id.new_room);
         newRoom.setOnClickListener(view -> {
             Intent intent = new Intent(ConstructionActivity.this, NewRoomActivity.class);
-            intent.putExtra("Hab",hab.getName());
+            //intent.putExtra("Hab",hab.getName());
             //intent.putExtra("hab",hab);
             launcherNewRoom.launch(intent);
         });
@@ -106,7 +112,7 @@ public class ConstructionActivity extends AppCompatActivity {
                 Toast.makeText(ConstructionActivity.this, "Il n'y a pas de pièces de créées.", Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ConstructionActivity.this, ModificationRoomActivity.class);
-                intent.putExtra("Hab", hab.getName());
+                //intent.putExtra("Hab", hab.getName());
                 //intent.putExtra("hab",hab);
                 launcherModificationRoom.launch(intent);
             }
@@ -168,6 +174,7 @@ public class ConstructionActivity extends AppCompatActivity {
             writer.name("LAST_HAB");
             if (s == 0){ //Habitation actuelle
                 writer.value(hab.getName());
+                Log.i("GLOBALs","YES");
             }
             if (s == 1){ //Habitation actuelle étant suppr, on mets en dernière habitation la dernière créée.
                 if (listeHabitation.size() != 0) {
@@ -222,6 +229,8 @@ public class ConstructionActivity extends AppCompatActivity {
         nameHab.setText(hab.getName());
         listeHabitation.add(hab.getName());
         FabriqueNumero.getInstance().resetCompteurPiece();
+        Globals.getInstance().setDataHabitation(hab);
+        Globals.getInstance().setmData(null);
     }
 
     protected AlertDialog alertOpenHabitation(){
@@ -235,6 +244,8 @@ public class ConstructionActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
                 hab = SaveManager.open(getApplicationContext(),finalNoms[n]);
+                Globals.getInstance().setDataHabitation(hab);
+                Globals.getInstance().setmData(null);
                 nameHab.setText(hab.getName());
             }
         });
@@ -267,6 +278,8 @@ public class ConstructionActivity extends AppCompatActivity {
         } else {
             hab = SaveManager.open(getApplicationContext(),nomLastHab1);
         }
+        Globals.getInstance().setDataHabitation(hab);
+        Globals.getInstance().setmData(null);
         nameHab.setText(hab.getName());
     }
 
