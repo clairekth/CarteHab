@@ -23,7 +23,6 @@ import java.util.List;
 public class AdapterListRoom extends ArrayAdapter<Piece> {
 
     private ArrayList<Piece> listePieces;
-    protected LayoutInflater inflater;
 
     public AdapterListRoom(@NonNull Context context, @NonNull ArrayList<Piece> pieces) {
         super(context, R.layout.room_cell, pieces);

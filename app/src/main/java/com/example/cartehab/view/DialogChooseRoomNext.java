@@ -50,7 +50,7 @@ public class DialogChooseRoomNext{
             pieces = new String[habitation.getListePieces().size() + 1];//Si non -> on est dans la création; elle n'est donc pas encore dans la liste
         }
         int i =0;
-        for (Piece p : habitation.getListePieces().values()){
+        for (Piece p : habitation.getListePieces()){
             if (!(p.getId().equals(mur.getPiece().getId()))){
                 pieces[i] = p.getNom();
                 i++;

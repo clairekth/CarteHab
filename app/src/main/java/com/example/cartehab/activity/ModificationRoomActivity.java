@@ -184,7 +184,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
         /*--AlertDialog qui permet de choisir la pièce que l'on veut modifier--*/
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.hashmapToList());
+        AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.getListePieces());
         alert.setTitle("Choisissez la pièce à modifier : ");
         alert.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
@@ -471,8 +471,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
-        hab.remove(piece);
-        hab.addPiece(piece);
         Globals.getInstance().setDataHabitation(hab);
         //SaveManager.save(getApplicationContext(),hab);
         Intent data = new Intent();

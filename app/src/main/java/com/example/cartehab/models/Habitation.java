@@ -11,12 +11,12 @@ import java.util.HashMap;
 
 public class Habitation implements Serializable {
     protected String id;
-    protected HashMap<String, Piece> listePieces;
+    protected ArrayList<Piece> listePieces;
     protected String name;
     protected int lastNumPiece;
 
     public Habitation(){
-        listePieces = new HashMap<>();
+        listePieces = new ArrayList<>();
         id = "HAB" + FabriqueNumero.getInstance().getNumeroHabitation();
         name = id;
     }
@@ -28,11 +28,11 @@ public class Habitation implements Serializable {
         return lastNumPiece;
     }
     public void addPiece(Piece p){
-        listePieces.put(p.getId(), p);
+        listePieces.add(p);
     }
 
     public void remove(Piece piece){
-        listePieces.remove(piece.getId());
+        listePieces.remove(piece);
     }
 
     public String getId(){
@@ -42,7 +42,7 @@ public class Habitation implements Serializable {
         return name;
     }
     public Piece getPiece(String nom){
-        for (Piece p : listePieces.values()){
+        for (Piece p : listePieces){
             if (p.getNom().equals(nom)){
                 return p;
             }
@@ -50,7 +50,7 @@ public class Habitation implements Serializable {
         return null;
     }
 
-    public HashMap<String, Piece> getListePieces(){
+    public ArrayList<Piece> getListePieces(){
         return listePieces;
     }
     @Override
@@ -61,23 +61,9 @@ public class Habitation implements Serializable {
                 '}';
     }
 
-    public ArrayList<Piece> hashmapToList(){
-        ArrayList<Piece> pieces = new ArrayList<>();
-        for (Piece p : listePieces.values()){
-            pieces.add(p);
-        }
-        return pieces;
-    }
 
-    public ArrayList<String> listeNomPieces(){
-        ArrayList<String> nomsPieces = new ArrayList<>();
-        for (Piece p : listePieces.values()){
-            nomsPieces.add(p.getNom());
-        }
-        return nomsPieces;
-    }
     public boolean nomPieceExisteDeja(String nom){
-        for (Piece p : listePieces.values()){
+        for (Piece p : listePieces){
             if (p.getNom().equalsIgnoreCase(nom)){
                 return true;
             }
