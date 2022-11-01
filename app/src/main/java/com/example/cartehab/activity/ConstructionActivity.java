@@ -109,7 +109,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button modifRoom = (Button) findViewById(R.id.modif_room);
         modifRoom.setOnClickListener(view -> {
             if (hab.getListePieces().size() == 0){
-                Toast.makeText(ConstructionActivity.this, "Il n'y a pas de pièces de créées.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConstructionActivity.this, getResources().getString(R.string.il_ny_a_pas_de_pieces), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ConstructionActivity.this, ModificationRoomActivity.class);
                 //intent.putExtra("Hab", hab.getName());
@@ -121,7 +121,7 @@ public class ConstructionActivity extends AppCompatActivity {
         Button openB = findViewById(R.id.open);
         openB.setOnClickListener(view -> {
             if (listeHabitation.size() == 1){
-                Toast.makeText(ConstructionActivity.this, "Il n'y a pas d'autres habitations enregistrées.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ConstructionActivity.this, getResources().getString(R.string.il_ny_a_pas_dautres_habitations), Toast.LENGTH_LONG).show();
             } else {
                 SaveManager.save(getApplicationContext(),hab);
                 saveListeHabitation(0);
@@ -234,11 +234,11 @@ public class ConstructionActivity extends AppCompatActivity {
 
     protected AlertDialog alertOpenHabitation(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choisissez l'habitation à ouvrir : ");
+        builder.setTitle(getResources().getString(R.string.choisissez_habitation_a_ouvrir));
         String[] noms = new String[listeHabitation.size()];
         noms = listeHabitation.toArray(noms);
         final String[] finalNoms = noms;
-        builder.setSingleChoiceItems(noms,0, null).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(noms,0, null).setPositiveButton(getResources().getString(R.string.valider), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
@@ -249,7 +249,7 @@ public class ConstructionActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.annuler), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

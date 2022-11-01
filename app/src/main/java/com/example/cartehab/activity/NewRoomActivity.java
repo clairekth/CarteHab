@@ -248,7 +248,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
     public void set3D(){
         if (orientation().equals("Nord")){
-            orientation.setText("Nord");
+            orientation.setText(getResources().getString(R.string.nord));
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -261,7 +261,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 wall.setImageBitmap(null);
             }
         } else if (orientation().equals("Est")){
-            orientation.setText("Est");
+            orientation.setText(getResources().getString(R.string.est));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -276,7 +276,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             }
         } else if (orientation().equals("Sud")){
-            orientation.setText("Sud");
+            orientation.setText(getResources().getString(R.string.sud));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -290,7 +290,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
             }
         } else {
-            orientation.setText("Ouest");
+            orientation.setText(getResources().getString(R.string.ouest));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -319,18 +319,18 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
-                    b.setText("Pièce suivante non créée.");
+                    b.setText(getResources().getString(R.string.piece_suivante_non_creee));
                 } else {
                     b.setText(p.getPieceSuivante().getNom());
                 }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
-                b.setOnClickListener(viewB -> {
+                /*b.setOnClickListener(viewB -> {
                     if (p.getPieceSuivante() != null) {
                         Toast.makeText(NewRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(NewRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 listeButtonPorte.add(b);
                 layout.addView(b);
             }

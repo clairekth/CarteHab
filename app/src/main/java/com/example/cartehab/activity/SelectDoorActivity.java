@@ -98,17 +98,17 @@ public class SelectDoorActivity extends AppCompatActivity {
         m = Globals.getInstance().getmData();
         //Globals.getInstance().setmData(null);
 
-        ImageView image = findViewById(R.id.im_selectActivity);
         Button delete = (Button) findViewById(R.id.delete_button);
 
         listePorte = new ArrayList<>();
         m.deletePortes();
+        im = (ImageView) findViewById(R.id.im_selectActivity);
 
         FileInputStream fis = null;
         try {
             fis = openFileInput(m.getId());
             Bitmap bp = BitmapFactory.decodeStream(fis);
-            image.setImageBitmap(bp);
+            im.setImageBitmap(bp);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -124,8 +124,6 @@ public class SelectDoorActivity extends AppCompatActivity {
         myPaint.setAlpha(70);
 
         canvas = new Canvas();
-
-        im = (ImageView) findViewById(R.id.im_selectActivity);
 
         im.setOnTouchListener(new View.OnTouchListener() {
             @Override

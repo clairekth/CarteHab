@@ -185,7 +185,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         /*--AlertDialog qui permet de choisir la pièce que l'on veut modifier--*/
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         AdapterListRoom adapter = new AdapterListRoom(ModificationRoomActivity.this,hab.getListePieces());
-        alert.setTitle("Choisissez la pièce à modifier : ");
+        alert.setTitle(getResources().getString(R.string.choisissez_piece_a_modifier));
         alert.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -203,7 +203,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             }
         });
 
-        alert.setNegativeButton("Annuler", (dialog, which) -> {
+        alert.setNegativeButton(getResources().getString(R.string.annuler), (dialog, which) -> {
             dialog.cancel();
             finish();
         });
@@ -231,7 +231,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             }
 
             if (m == null) {
-                Toast.makeText(ModificationRoomActivity.this, "Impossible de modifier ce mur. Prenez d'abord une photo.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModificationRoomActivity.this, getResources().getString(R.string.impossible_modifier_mur), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
                 //intent.putExtra("Mur",m);
@@ -257,7 +257,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             attention.setOnClickListener(view -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ModificationRoomActivity.this);
                 builder.setMessage(piece.erreurs());
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
@@ -324,7 +324,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     public void set3D(){
         if (orientation().equals("Nord")){
-            orientation.setText("Nord");
+            orientation.setText(getResources().getString(R.string.nord));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -340,7 +340,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             }
         } else if (orientation().equals("Est")){
-            orientation.setText("Est");
+            orientation.setText(getResources().getString(R.string.est));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -357,7 +357,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             }
         } else if (orientation().equals("Sud")){
-            orientation.setText("Sud");
+            orientation.setText(getResources().getString(R.string.sud));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -374,7 +374,7 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
             }
         } else {
-            orientation.setText("Ouest");
+            orientation.setText(getResources().getString(R.string.ouest));
 
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -407,18 +407,18 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
-                    b.setText("Pièce suivante non créée.");
+                    b.setText(getResources().getString(R.string.piece_suivante_non_creee));
                 } else {
                     b.setText(p.getPieceSuivante().getNom());
                 }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
-                b.setOnClickListener(viewB -> {
+                /*b.setOnClickListener(viewB -> {
                     if (p.getPieceSuivante() != null) {
                         Toast.makeText(ModificationRoomActivity.this, p.getPieceSuivante().getNom(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ModificationRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 listeButtonPorte.add(b);
                 layout.addView(b);
             }

@@ -55,18 +55,18 @@ public class DialogNameCustom extends Dialog {
             String fullName = this.textInput.getText().toString();
             if (hab != null) {
                 if (fullName == null || fullName.isEmpty()) {
-                    Toast.makeText(this.context, "Entrez le nom d'une pièce", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.context, context.getResources().getString(R.string.entrez_le_nom_de_la_piece), Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (hab.nomPieceExisteDeja(fullName)) {
-                    Toast.makeText(this.context, "Ce nom de pièce existe déjà.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.context, context.getResources().getString(R.string.nom_existe_deja), Toast.LENGTH_LONG).show();
                     return;
                 }
             } else {
 
                 for (String n : nomsH){
                     if (n.equalsIgnoreCase(fullName)){
-                        Toast.makeText(this.context, "Ce nom d'habitation existe déjà.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.context, context.getResources().getString(R.string.nom_existe_deja), Toast.LENGTH_LONG).show();
                         return;
                     }
                 }

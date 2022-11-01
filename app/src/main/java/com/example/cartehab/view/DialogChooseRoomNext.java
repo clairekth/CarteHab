@@ -42,7 +42,7 @@ public class DialogChooseRoomNext{
     public void showAlertDialog()  {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
 
-        builder.setTitle("Selectionner la pièce suivante");
+        builder.setTitle(activity.getResources().getString(R.string.selectionner_piece_suivante));
         final String[] pieces;
         if (habitation.nomPieceExisteDeja(mur.getPiece().getNom())){ //On check si la pièce où on est actuellement est déjà dans la liste
             pieces = new String[habitation.getListePieces().size()]; //Si oui -> on est dans la modification, il faut l'enlever de la sélection possible
@@ -57,8 +57,7 @@ public class DialogChooseRoomNext{
             }
         }
 
-        pieces[i] = "Pièce non créée";
-
+        pieces[i] = activity.getResources().getString(R.string.piece_non_creee);
 
         int checkedItem = 0;
         final Set<String> selectedItems = new HashSet<String>();

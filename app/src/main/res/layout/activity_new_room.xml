@@ -59,7 +59,7 @@
             android:id="@+id/take_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Prendre une photo"
+            android:text="@string/prendre_une_photo"
 
             />
     </LinearLayout>
