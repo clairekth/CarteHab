@@ -28,7 +28,7 @@ public class Porte implements Serializable {
             /*Modifie automatiquement les portes du même mur que this de la pièce suivante si il n'y a qu'une porte*/
             if (p != null) {
                 if (mur.getOrientation().equals("N")) {
-                    if (p.getMurSud() != null && p.getMurNord().getListePortes().size() == 1) {
+                    if (p.getMurSud() != null && p.getMurSud().getListePortes().size() == 1) {
                         for (Porte po : p.getMurSud().getListePortes()) {
                             if (po.pieceSuivante == null) {
                                 po.setPieceSuivante(this.mur.getPiece());

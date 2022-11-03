@@ -29,4 +29,5 @@
     <string name="selectionner_piece_suivante">Selectionner la pièce suivante</string>
     <string name="piece_non_creee">Pièce non créée</string>
     <string name="nom_existe_deja">Ce nom existe déjà.</string>
+    <string name="visualisation">Visualisation</string>
 </resources>
