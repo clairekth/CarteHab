@@ -238,11 +238,7 @@ public class Piece implements Serializable {
     @Override
     public String toString() {
         return "Piece{" +
-                ", nom='" + nom + '\'' +
-                ", murNord=" + murNord +
-                ",\n murSud=" + murSud +
-                ",\n murEst=" + murEst +
-                ",\n murOuest=" + murOuest +
+                "nom='" + id +
                 "}\n";
     }
 }
