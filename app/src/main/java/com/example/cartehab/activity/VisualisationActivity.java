@@ -146,6 +146,8 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
 
         return builder.create();
     }
+
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         /*Mise à jour des data de l'accéléromètre et du magnétomère*/
