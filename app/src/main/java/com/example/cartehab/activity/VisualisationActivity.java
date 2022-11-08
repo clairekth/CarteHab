@@ -33,56 +33,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class VisualisationActivity extends AppCompatActivity implements SensorEventListener {
+public class VisualisationActivity extends AppCompatActivity {
     protected Piece p;
     protected ArrayList<String> listeHabitation;
     protected TextView roomName;
     protected Mur m;
     protected Habitation h;
     protected ArrayList<Button> listeButtonPorte;
-    protected float degree;
     protected ImageView wall;
     protected ConstraintLayout layout;
-    protected long lastUpdateTime = 0;
     protected TextView orientation;
-
-    /**
-     * Champ contenant le SensorManager.
-     */
-    protected SensorManager sensorManager;
-
-
-    /**
-     * Champ contenant le capteur d'accélération.
-     */
-    protected Sensor sensorAccelerometer;
-
-    /**
-     * Champ contenant le capteur magnétique.
-     */
-    protected Sensor sensorMagnetic;
-
-    /**
-     * Champ contenant un tableau qui contient les données du capteur d'accélération.
-     */
-    private final float[] accelerometerData = new float[3];
-
-    /**
-     * Champ contenant un tableau qui contient les données du capteur magnétique.
-     */
-    private final float[] magnetometerData = new float[3];
-
-    /**
-     * Champ contenant un tableau qui contient la matrice de rotation.
-     */
-    private final float[] rotationMatrix = new float[9];
-
-    /**
-     * Champ contenant un tableau qui contient l'orientation des angles (-z, x , y).
-     */
-    private final float[] orientationAngles = new float[3];
-
     private boolean dialogDismiss;
+    private String orientationMur;
+    protected Button droit;
+    protected Button gauche;
+    private String[] ptCardinaux = {"Nord", "Est", "Sud", "Ouest"};
+    private int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,20 +63,34 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
         layout = findViewById(R.id.layout);
         orientation = findViewById(R.id.orientation);
         dialogDismiss = false;
+        orientationMur = "Nord";
 
         AlertDialog d = alertOpenHabitation();
         d.show();
 
+        droit = findViewById(R.id.button_droit);
+        droit.setOnClickListener(view -> {
+            goDroite();
+        });
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorMagnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-        sensorManager.registerListener(VisualisationActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(VisualisationActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
+        gauche = findViewById(R.id.button_gauche);
+        gauche.setOnClickListener(view -> {
+            goGauche();
+        });
 
     }
 
+    protected void goDroite(){
+        i = (i+1)%4;
+        orientationMur = ptCardinaux[i];
+        set3D();
+    }
+
+    protected void goGauche(){
+        i = (i+3)%4; //i+3 modulo 4 <=> i-1
+        orientationMur = ptCardinaux[i];
+        set3D();
+    }
 
     protected AlertDialog alertOpenHabitation(){
         Log.i("TEST","CC");
@@ -125,11 +105,12 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
                 h = SaveManager.open(getApplicationContext(),finalNoms[n]);
                 if (h.getListePieces().size() == 0){
-                    Toast.makeText(VisualisationActivity.this,"NN",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VisualisationActivity.this,"Pas de pièces de créées.",Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     p = h.getListePieces().get(0);
                     roomName.setText(p.getNom());
+                    set3D();
                     dialogDismiss = true;
                 }
 
@@ -148,62 +129,8 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
     }
 
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        /*Mise à jour des data de l'accéléromètre et du magnétomère*/
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            System.arraycopy(event.values, 0, accelerometerData, 0, accelerometerData.length);
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            System.arraycopy(event.values, 0, magnetometerData, 0, magnetometerData.length);
-        }
-
-        if (System.currentTimeMillis() - lastUpdateTime > 50) {
-            SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData);
-            SensorManager.getOrientation(rotationMatrix, orientationAngles);
-            degree = (float) Math.toDegrees(-orientationAngles[0]);
-            ImageView compass = findViewById(R.id.compass);
-            compass.setRotation(degree);
-            //Log.i("COmpass", "" + d);
-
-            //Permet d'avoir un degree un peu plus stable
-            degree = (float) Math.toDegrees((orientationAngles[0] + Math.PI*2) % (Math.PI*2));
-            if (dialogDismiss) {
-                set3D();
-            }
-            //Log.i("ORIEN", orientation() + " : " + degree);
-
-            lastUpdateTime = System.currentTimeMillis();
-        }
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    public String orientation(){
-        /*if (degree < 45 && degree >= -45){
-            return "Nord";
-        } else if (degree >= 45 && degree < 135){
-            return "Ouest";
-        } else if (degree < -45 && degree >= -135){
-            return "Est";
-        }
-        return "Sud";*/
-
-        if (degree < 90) {
-            return "Nord";
-        } else if (degree >=90 && degree < 180) {
-            return "Est";
-        } else if (degree >=180 && degree < 270){
-            return "Sud";
-        }
-        return "Ouest";
-    }
-
     public void set3D(){
-        if (orientation().equals("Nord")){
+        if (orientationMur.equals("Nord")){
             orientation.setText(getResources().getString(R.string.nord));
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
@@ -216,7 +143,7 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
             } else {
                 wall.setImageBitmap(null);
             }
-        } else if (orientation().equals("Est")){
+        } else if (orientationMur.equals("Est")){
             orientation.setText(getResources().getString(R.string.est));
 
             for (Button b : listeButtonPorte){
@@ -231,7 +158,7 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
                 wall.setImageBitmap(null);
 
             }
-        } else if (orientation().equals("Sud")){
+        } else if (orientationMur.equals("Sud")){
             orientation.setText(getResources().getString(R.string.sud));
 
             for (Button b : listeButtonPorte){
@@ -247,7 +174,6 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
             }
         } else {
             orientation.setText(getResources().getString(R.string.ouest));
-
             for (Button b : listeButtonPorte){
                 layout.removeView(b);
             }
@@ -283,7 +209,7 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
                 b.setOnClickListener(viewB -> {
                     if (porte.getPieceSuivante() != null) {
                         p = porte.getPieceSuivante();
-                        roomName.setText(p.getNom());
+                        set3D();
                     }
                 });
                 listeButtonPorte.add(b);
@@ -293,32 +219,5 @@ public class VisualisationActivity extends AppCompatActivity implements SensorEv
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onBackPressed(){
-        sensorManager.unregisterListener(VisualisationActivity.this);
-        finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause(){
-        sensorManager.unregisterListener(VisualisationActivity.this);
-
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        sensorManager.registerListener(VisualisationActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(VisualisationActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    public void finish() {
-
-        super.finish();
     }
 }
