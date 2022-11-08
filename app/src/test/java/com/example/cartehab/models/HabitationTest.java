@@ -49,10 +49,10 @@ public class HabitationTest {
         Mur mE = new Mur(p1, "E", "MUR_EST");
 
         Porte p = new Porte(mS,0,0,0,0);
-        p.setPieceSuivante(p2);
+        //p.setPieceSuivante(p2);
         mS.addPorte(p);
         p = new Porte(mS,0,0,0,0);
-        p.setPieceSuivante(p4);
+        //p.setPieceSuivante(p4);
         mS.addPorte(p);
 
         p1.setMur(mS);
@@ -67,7 +67,7 @@ public class HabitationTest {
         mE = new Mur(p2, "E", "MUR_EST");
 
         p = new Porte(mN,0,0,0,0);
-        p.setPieceSuivante(p1);
+        //p.setPieceSuivante(p1);
         mN.addPorte(p);
         p = new Porte(mS,0,0,0,0);
         p.setPieceSuivante(p3);
@@ -103,7 +103,7 @@ public class HabitationTest {
         mE = new Mur(p4, "E", "MUR_EST");
 
         p = new Porte(mN,0,0,0,0);
-        p.setPieceSuivante(p1);
+        //p.setPieceSuivante(p1);
         mN.addPorte(p);
         p = new Porte(mS,0,0,0,0);
         p.setPieceSuivante(p5);
@@ -155,13 +155,17 @@ public class HabitationTest {
         System.out.println("-----------------");
 
         List<Piece> list = h.getListSP(graph,p1,p5);
-        System.out.println(list.toString());
+        if (list == null){
+            System.out.println("Pas de chemin");
+        } else {
+            System.out.println(list.toString());
+        }
         System.out.println("-----------------");
         list = h.getListSP(graph,p4,p3);
         System.out.println(list.toString());
         System.out.println("-----------------");
-        list = h.getListSP(graph,p3,p1);
-        System.out.println(list.toString());
+        //list = h.getListSP(graph,p3,p1);
+        //System.out.println(list.toString());
 
     }
 }

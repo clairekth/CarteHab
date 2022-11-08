@@ -235,10 +235,23 @@ public class Piece implements Serializable {
         }
     }
 
+    public Mur getMur(String o){
+        if (o.equals("Nord")){
+            return murNord;
+        } else if (o.equals("Sud")){
+            return murSud;
+        } else if (o.equals("Est")){
+            return murEst;
+        } else {
+            return murOuest;
+        }
+    }
     @Override
     public String toString() {
         return "Piece{" +
                 "nom='" + id +
                 "}\n";
     }
+
+
 }

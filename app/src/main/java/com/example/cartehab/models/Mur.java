@@ -67,5 +67,12 @@ public class Mur implements Serializable {
         return listePortes.size() != 0;
     }
 
-
+    public boolean porteVers(Piece dst){
+        for (Porte p : listePortes){
+            if (p.porteVers(dst)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

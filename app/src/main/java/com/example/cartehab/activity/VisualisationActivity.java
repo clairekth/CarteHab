@@ -17,6 +17,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
+import com.example.cartehab.view.DialogChooseDestinationRoom;
+import com.example.cartehab.view.DialogChooseRoomNext;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,18 +40,20 @@ public class VisualisationActivity extends AppCompatActivity {
     protected Piece p;
     protected ArrayList<String> listeHabitation;
     protected TextView roomName;
-    protected Mur m;
     protected Habitation h;
     protected ArrayList<Button> listeButtonPorte;
     protected ImageView wall;
     protected ConstraintLayout layout;
     protected TextView orientation;
-    private boolean dialogDismiss;
     private String orientationMur;
     protected Button droit;
     protected Button gauche;
     private String[] ptCardinaux = {"Nord", "Est", "Sud", "Ouest"};
     private int i = 0;
+    protected ImageButton goToButton;
+    protected boolean gpsActif;
+    protected Piece pieceFinale;
+    protected TextView instructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +67,10 @@ public class VisualisationActivity extends AppCompatActivity {
         wall = findViewById(R.id.wall);
         layout = findViewById(R.id.layout);
         orientation = findViewById(R.id.orientation);
-        dialogDismiss = false;
+        instructions = findViewById(R.id.instructions_gps);
+        instructions.setZ(1);
         orientationMur = "Nord";
+        gpsActif = false;
 
         AlertDialog d = alertOpenHabitation();
         d.show();
@@ -78,20 +85,49 @@ public class VisualisationActivity extends AppCompatActivity {
             goGauche();
         });
 
+        goToButton = findViewById(R.id.go_to_button);
+        goToButton.setOnClickListener(view -> {
+            DialogChooseDestinationRoom.NameRoomNextListener listener = new DialogChooseDestinationRoom.NameRoomNextListener() {
+                @Override
+                public void nameRoomNext(String fullName) {
+                    pieceFinale = h.getPiece(fullName);
+                    gpsActif = true;
+                    gpsInstruction();
+                }
+            };
+            final DialogChooseDestinationRoom dialog = new DialogChooseDestinationRoom(VisualisationActivity.this, h,p,listener);
+            dialog.showAlertDialog();
+        });
+
     }
+
+
 
     protected void goDroite(){
         i = (i+1)%4;
         orientationMur = ptCardinaux[i];
         set3D();
+        gpsInstruction();
     }
 
     protected void goGauche(){
         i = (i+3)%4; //i+3 modulo 4 <=> i-1
         orientationMur = ptCardinaux[i];
         set3D();
+        gpsInstruction();
     }
 
+    protected void gpsInstruction(){
+        if (gpsActif){
+            if (p == pieceFinale){
+                Toast.makeText(VisualisationActivity.this, "Vous êtes arrivé(e) à destination !", Toast.LENGTH_LONG).show();
+                gpsActif = false;
+                instructions.setText("");
+            } else {
+                String instruction = h.indicationGPS(p,pieceFinale);
+                instructions.setText(instruction);            }
+        }
+    }
     protected AlertDialog alertOpenHabitation(){
         Log.i("TEST","CC");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -111,7 +147,6 @@ public class VisualisationActivity extends AppCompatActivity {
                     p = h.getListePieces().get(0);
                     roomName.setText(p.getNom());
                     set3D();
-                    dialogDismiss = true;
                 }
 
             }
@@ -209,7 +244,9 @@ public class VisualisationActivity extends AppCompatActivity {
                 b.setOnClickListener(viewB -> {
                     if (porte.getPieceSuivante() != null) {
                         p = porte.getPieceSuivante();
+                        roomName.setText(p.getNom());
                         set3D();
+                        gpsInstruction();
                     }
                 });
                 listeButtonPorte.add(b);

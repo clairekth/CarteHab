@@ -188,4 +188,7 @@ public class Porte implements Serializable {
         return 0;
     }
 
+    public boolean porteVers(Piece p){
+        return pieceSuivante == p;
+    }
 }

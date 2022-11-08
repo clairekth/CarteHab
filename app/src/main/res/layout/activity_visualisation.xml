@@ -26,14 +26,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
-
+    <TextView
+        android:id="@+id/instructions_gps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textSize="11pt"
+        android:textAlignment="center"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/orientation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
         android:id="@+id/wall"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/orientation"
+        app:layout_constraintTop_toBottomOf="@id/instructions_gps"
         app:layout_constraintStart_toStartOf="parent"/>
 
 
@@ -55,7 +65,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-
+    <ImageButton
+        android:id="@+id/go_to_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        app:srcCompat="@drawable/bonhomme_marche"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 
 

@@ -134,9 +134,41 @@ public class Habitation implements Serializable {
     public List<Piece> getListSP(Graph<Piece,DefaultEdge> graph, Piece src, Piece dest){
         BFSShortestPath<Piece,DefaultEdge> graphSP = new BFSShortestPath<>(graph);
         GraphPath<Piece,DefaultEdge> sp = graphSP.getPath(src,dest);
-
+        if (sp == null){
+            return null;
+        }
         return sp.getVertexList();
 
+    }
+
+    public String indicationGPS(Piece src, Piece dest){
+        StringBuilder bd = new StringBuilder();
+        if (!verificationCheminPossible(src, dest)){
+            bd.append("Pas de chemin possible vers la pièce de destination.");
+            return bd.toString();
+        }
+        List<Piece> listPiece = this.getListSP(listToGraph(),src,dest);
+
+        Piece pSuivante = listPiece.get(1);
+        if ( src.getMurEst() != null && src.getMurEst().porteVers(pSuivante)){
+            bd.append("Tournez vous vers le mur Est et prenez la porte vers " + pSuivante.getNom());
+        } else if (src.getMurNord() != null && src.getMurNord().porteVers(pSuivante)){
+            bd.append("Tournez vous vers le mur Nord et prenez la porte vers " + pSuivante.getNom());
+        }else if (src.getMurSud() != null && src.getMurSud().porteVers(pSuivante)){
+            bd.append("Tournez vous vers le mur Sud et prenez la porte vers " + pSuivante.getNom());
+        } else if (src.getMurOuest() != null && src.getMurOuest().porteVers(pSuivante)){
+            bd.append("Tournez vous vers le mur Ouest et prenez la porte vers " + pSuivante.getNom());
+        }
+
+        return bd.toString();
+
+    }
+
+    public boolean verificationCheminPossible(Piece src, Piece dest){
+        if (getListSP(listToGraph(),src,dest) == null){
+            return false;
+        }
+        return true;
     }
 
 }
