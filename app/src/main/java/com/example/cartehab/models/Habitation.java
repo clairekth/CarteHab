@@ -1,8 +1,5 @@
 package com.example.cartehab.models;
 
-import android.os.Build;
-import android.util.Log;
-
 import com.example.cartehab.outils.FabriqueNumero;
 
 import org.jgrapht.Graph;
@@ -13,7 +10,6 @@ import org.jgrapht.graph.SimpleGraph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Habitation implements Serializable {
@@ -170,5 +166,55 @@ public class Habitation implements Serializable {
         }
         return true;
     }
+
+    public Graph<String, DefaultEdge> nomPieceToGraph(){
+        Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+        for (Piece p : listePieces){
+            graph.addVertex(p.getNom());
+            if (p.getMurEst() != null){
+                for (Porte po : p.getMurEst().getListePortes()){
+                    if (po.getPieceSuivante() != null){
+                        if (!graph.containsVertex(po.getPieceSuivante().getNom())){
+                            graph.addVertex(po.getPieceSuivante().getNom());
+                        }
+                        graph.addEdge(p.getNom(),po.getPieceSuivante().getNom());
+                    }
+                }
+            }
+            if (p.getMurNord() != null){
+                for (Porte po : p.getMurNord().getListePortes()){
+                    if (po.getPieceSuivante() != null){
+                        if (!graph.containsVertex(po.getPieceSuivante().getNom())) {
+                            graph.addVertex(po.getPieceSuivante().getNom());
+                        }
+                        graph.addEdge(p.getNom(),po.getPieceSuivante().getNom());
+
+                    }
+                }
+            }
+            if (p.getMurSud() != null){
+                for (Porte po : p.getMurSud().getListePortes()){
+                    if (po.getPieceSuivante() != null){
+                        if (!graph.containsVertex(po.getPieceSuivante().getNom())){
+                            graph.addVertex(po.getPieceSuivante().getNom());
+                        }
+                        graph.addEdge(p.getNom(),po.getPieceSuivante().getNom());
+                    }
+                }
+            }
+            if (p.getMurOuest() != null){
+                for (Porte po : p.getMurOuest().getListePortes()){
+                    if (po.getPieceSuivante() != null){
+                        if (!graph.containsVertex(po.getPieceSuivante().getNom())){
+                            graph.addVertex(po.getPieceSuivante().getNom());
+                        }
+                        graph.addEdge(p.getNom(),po.getPieceSuivante().getNom());
+                    }
+                }
+            }
+        }
+        return graph;
+    }
+
 
 }

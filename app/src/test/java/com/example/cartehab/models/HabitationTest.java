@@ -10,6 +10,7 @@ import org.jgrapht.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class HabitationTest {
@@ -167,5 +168,12 @@ public class HabitationTest {
         //list = h.getListSP(graph,p3,p1);
         //System.out.println(list.toString());
 
+    }
+
+    @Test
+    public void testTime(){
+        LocalTime time = LocalTime.now();
+        time = time.minusNanos(time.getNano());
+        System.out.println(time.toString());
     }
 }

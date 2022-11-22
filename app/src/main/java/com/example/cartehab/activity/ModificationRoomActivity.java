@@ -134,6 +134,8 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                             m = new Mur(piece, "O",piece.getId()+"MUR_OUEST" );
                             fos = openFileOutput(piece.getId()+"MUR_OUEST", MODE_PRIVATE);
                         }
+                        m.setHeurePhoto();
+                        m.getMeteo(this);
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 

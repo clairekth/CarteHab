@@ -31,6 +31,7 @@ import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogChooseDestinationRoom;
 import com.example.cartehab.view.DialogChooseRoomNext;
+import com.example.cartehab.view.GraphDialog;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -99,6 +100,54 @@ public class VisualisationActivity extends AppCompatActivity {
             dialog.showAlertDialog();
         });
 
+        ImageButton information = findViewById(R.id.information_button);
+        information.setOnClickListener(view -> {
+            AlertDialog.Builder bd = new AlertDialog.Builder(this);
+            switch (orientationMur) {
+                case "Nord" :
+                    if (p.getMurNord() != null){
+                        bd.setMessage("Heure de la prise de la photo : " + p.getMurNord().getHeurePhoto().toString() +"\n" +
+                                "Temps : " + p.getMurNord().getTemps());
+                    } else {
+                        bd.setMessage("Pas d'informations.");
+                    }
+                    break;
+                case "Ouest":
+                    if (p.getMurOuest() != null){
+                        bd.setMessage("Heure de la prise de la photo : " + p.getMurOuest().getHeurePhoto().toString() +"\n" +
+                                "Temps : " + p.getMurOuest().getTemps());
+                    } else {
+                        bd.setMessage("Pas d'informations.");
+                    }
+                    break;
+                case "Est":
+                    if (p.getMurEst() != null){
+                        bd.setMessage("Heure de la prise de la photo : " + p.getMurEst().getHeurePhoto().toString() +"\n" +
+                                "Temps : " + p.getMurEst().getTemps());
+                    } else {
+                        bd.setMessage("Pas d'informations.");
+                    }
+                    break;
+                case "Sud":
+                    if (p.getMurSud() != null){
+                        bd.setMessage("Heure de la prise de la photo : " + p.getMurSud().getHeurePhoto().toString() +"\n" +
+                                "Temps : " + p.getMurSud().getTemps());
+                    } else {
+                        bd.setMessage("Pas d'informations.");
+                    }
+                    break;
+            }
+            AlertDialog alert = bd.create();
+            alert.setTitle("Informations sur la photo");
+            alert.show();
+        });
+
+
+        Button graph = findViewById(R.id.graph);
+        graph.setOnClickListener(view -> {
+            GraphDialog g = new GraphDialog(this,h.nomPieceToGraph());
+            g.show();
+        });
     }
 
 
@@ -129,7 +178,6 @@ public class VisualisationActivity extends AppCompatActivity {
         }
     }
     protected AlertDialog alertOpenHabitation(){
-        Log.i("TEST","CC");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.choisissez_habitation_a_ouvrir));
         String[] noms = new String[listeHabitation.size()];

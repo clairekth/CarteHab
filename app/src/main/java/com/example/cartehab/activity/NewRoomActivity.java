@@ -124,6 +124,8 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                             m = new Mur(p, "O",p.getId()+"MUR_OUEST" );
                             fos = openFileOutput(p.getId()+"MUR_OUEST", MODE_PRIVATE);
                         }
+                        m.setHeurePhoto();
+                        m.getMeteo(this);
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
