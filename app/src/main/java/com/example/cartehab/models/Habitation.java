@@ -147,13 +147,13 @@ public class Habitation implements Serializable {
 
         Piece pSuivante = listPiece.get(1);
         if ( src.getMurEst() != null && src.getMurEst().porteVers(pSuivante)){
-            bd.append("Tournez vous vers le mur Est et prenez la porte vers " + pSuivante.getNom());
+            bd.append("Tournez vous vers le mur Est et prenez la porte vers : " + pSuivante.getNom());
         } else if (src.getMurNord() != null && src.getMurNord().porteVers(pSuivante)){
-            bd.append("Tournez vous vers le mur Nord et prenez la porte vers " + pSuivante.getNom());
+            bd.append("Tournez vous vers le mur Nord et prenez la porte vers : " + pSuivante.getNom());
         }else if (src.getMurSud() != null && src.getMurSud().porteVers(pSuivante)){
-            bd.append("Tournez vous vers le mur Sud et prenez la porte vers " + pSuivante.getNom());
+            bd.append("Tournez vous vers le mur Sud et prenez la porte vers : " + pSuivante.getNom());
         } else if (src.getMurOuest() != null && src.getMurOuest().porteVers(pSuivante)){
-            bd.append("Tournez vous vers le mur Ouest et prenez la porte vers " + pSuivante.getNom());
+            bd.append("Tournez vous vers le mur Ouest et prenez la porte vers : " + pSuivante.getNom());
         }
 
         return bd.toString();

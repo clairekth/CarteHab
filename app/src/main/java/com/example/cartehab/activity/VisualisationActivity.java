@@ -16,6 +16,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -94,6 +97,7 @@ public class VisualisationActivity extends AppCompatActivity {
                     pieceFinale = h.getPiece(fullName);
                     gpsActif = true;
                     gpsInstruction();
+                    set3D();
                 }
             };
             final DialogChooseDestinationRoom dialog = new DialogChooseDestinationRoom(VisualisationActivity.this, h,p,listener);
@@ -173,8 +177,44 @@ public class VisualisationActivity extends AppCompatActivity {
                 gpsActif = false;
                 instructions.setText("");
             } else {
+                gauche.clearAnimation();
+                droit.clearAnimation();
                 String instruction = h.indicationGPS(p,pieceFinale);
-                instructions.setText(instruction);            }
+                instructions.setText(instruction);
+                String m = instructions.getText().toString().substring(25);
+                String mots[] = m.split(" et"); //Split pour récupérer juste le mots avant le " et" qui est l'orientation du Mur que l'on veux
+                Animation animation = new AlphaAnimation(1, 0);
+                animation.setDuration(500);
+                animation.setRepeatCount(Animation.INFINITE);
+                if (mots[0].equals("Nord")){
+                    if (i == 1){ //On est à l'Est
+                        gauche.startAnimation(animation);
+                    } else if (i != 0){
+                        droit.startAnimation(animation);
+                    }
+                }
+                if (mots[0].equals("Sud")){
+                    if (i == 3){
+                        gauche.startAnimation(animation);
+                    } else if (i != 2){
+                        droit.startAnimation(animation);
+                    }
+                }
+                if (mots[0].equals("Est")){
+                    if (i == 0){
+                        droit.startAnimation(animation);
+                    } else if (i != 1) {
+                        gauche.startAnimation(animation);
+                    }
+                }
+                if (mots[0].equals("Ouest")){
+                    if (i == 2){
+                        gauche.startAnimation(animation);
+                    } else if (i != 3){
+                        droit.startAnimation(animation);
+                    }
+                }
+            }
         }
     }
     protected AlertDialog alertOpenHabitation(){
@@ -216,6 +256,7 @@ public class VisualisationActivity extends AppCompatActivity {
         if (orientationMur.equals("Nord")){
             orientation.setText(getResources().getString(R.string.nord));
             for (Button b : listeButtonPorte){
+                b.clearAnimation();
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
@@ -230,6 +271,7 @@ public class VisualisationActivity extends AppCompatActivity {
             orientation.setText(getResources().getString(R.string.est));
 
             for (Button b : listeButtonPorte){
+                b.clearAnimation();
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
@@ -245,6 +287,7 @@ public class VisualisationActivity extends AppCompatActivity {
             orientation.setText(getResources().getString(R.string.sud));
 
             for (Button b : listeButtonPorte){
+                b.clearAnimation();
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
@@ -258,6 +301,7 @@ public class VisualisationActivity extends AppCompatActivity {
         } else {
             orientation.setText(getResources().getString(R.string.ouest));
             for (Button b : listeButtonPorte){
+                b.clearAnimation();
                 layout.removeView(b);
             }
             listeButtonPorte.clear();
@@ -288,7 +332,27 @@ public class VisualisationActivity extends AppCompatActivity {
                 } else {
                     b.setText(porte.getPieceSuivante().getNom());
                 }
-                b.setBackgroundColor(Color.argb(60,50,156,123));
+
+                //Si le GPS est actif, on récupère le nom de la salle suivante et on mets le bouton en rouge
+                if (gpsActif){
+                    String instruc = instructions.getText().toString();
+                    String mots[] = instruc.split(": ");
+                    if (porte.getPieceSuivante() != null && porte.getPieceSuivante().getNom().equals(mots[1])){
+                        //Mets le bouton en rouge
+                        b.setBackgroundColor(Color.argb(60,255,0,0));
+                        //Animation pour faire  clignoter le bouton
+                        Animation animation = new AlphaAnimation(1, 0);
+                        animation.setDuration(500);
+                        animation.setRepeatCount(Animation.INFINITE);
+                        b.startAnimation(animation);
+                    } else {
+                        b.setBackgroundColor(Color.argb(60,50,156,123));
+                    }
+                } else {
+                    b.setBackgroundColor(Color.argb(60,50,156,123));
+                }
+
+                //Si pièce suivante -> click sur le bouton entrain "l'entrée" dans la pièce suivante.
                 b.setOnClickListener(viewB -> {
                     if (porte.getPieceSuivante() != null) {
                         p = porte.getPieceSuivante();

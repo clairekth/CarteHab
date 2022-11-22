@@ -57,7 +57,6 @@ public class Mur implements Serializable {
                     double longi = location.getLongitude();
                     ExecutorService service = Executors.newSingleThreadExecutor();
                     service.execute(() -> {
-                        Log.i("TEMPS","CC");
                         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + longi + "&appid=3ac1d55ec65699a4ba5ba55e7fd93887&lang=fr";
                         InputStream in = null;
                         try {
@@ -68,8 +67,6 @@ public class Mur implements Serializable {
                             StringBuilder sb = new StringBuilder(description_data_tmp);
                             sb.replace(0, 1, sb.substring(0, 1).toUpperCase());
                             setTemps(sb.toString());
-                            Log.i("TEMPS0", description_data_tmp);
-                            Log.i("TEMPS1", temps);
 
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
