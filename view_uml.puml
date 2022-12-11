@@ -1,0 +1,60 @@
+@startuml
+class com.example.cartehab.view.DialogChooseDestinationRoom {
+# Activity activity
+# Habitation habitation
+# Piece pActuelle
+# NameRoomNextListener listener
+.. Consctructeur..
++ DialogChooseDestinationRoom(Activity,Habitation,Piece,DialogChooseDestinationRoom.NameRoomNextListener)
+.. Méthodes ..
++ void showAlertDialog()
+}
+interface com.example.cartehab.view.DialogChooseDestinationRoom.NameRoomNextListener {
+~ void nameRoomNext(String)
+}
+class com.example.cartehab.view.AdapterListRoom {
+- ArrayList<Piece> listePieces
+.. Consctructeur..
++ AdapterListRoom(Context,ArrayList<Piece>)
+.. Méthodes ..
++ View getView(int,View,ViewGroup)
++ View getDropDownView(int,View,ViewGroup)
++ Piece getListePieces(int)
+}
+class com.example.cartehab.view.DialogNameCustom {
+# EditText textInput
+# Button buttonOk
+# Context context
+# DialogNameCustom.FullNameListener listener
+# Habitation hab
+# ArrayList<String> nomsH
+.. Consctructeur..
++ DialogNameCustom(Context,DialogNameCustom.FullNameListener,Habitation)
++ DialogNameCustom(Context,DialogNameCustom.FullNameListener,ArrayList<String>)
+.. Méthodes ..
+# void onCreate(Bundle)
+}
+interface com.example.cartehab.view.DialogNameCustom.FullNameListener {
+~ void fullNameEntered(String)
+}
+class com.example.cartehab.view.DialogChooseRoomNext {
+# Activity activity
+# Habitation habitation
+# Mur mur
+# NameRoomNextListener listener
+.. Consctructeur..
++ DialogChooseRoomNext(Activity,Habitation,Mur,DialogChooseRoomNext.NameRoomNextListener)
+.. Méthodes ..
++ void showAlertDialog()
+}
+interface com.example.cartehab.view.DialogChooseRoomNext.NameRoomNextListener {
+~ void nameRoomNext(String)
+}
+
+
+com.example.cartehab.view.DialogChooseDestinationRoom +.. com.example.cartehab.view.DialogChooseDestinationRoom.NameRoomNextListener
+android.widget.ArrayAdapter <|-- com.example.cartehab.view.AdapterListRoom
+android.app.Dialog <|-- com.example.cartehab.view.DialogNameCustom
+com.example.cartehab.view.DialogNameCustom +.. com.example.cartehab.view.DialogNameCustom.FullNameListener
+com.example.cartehab.view.DialogChooseRoomNext +.. com.example.cartehab.view.DialogChooseRoomNext.NameRoomNextListener
+@enduml

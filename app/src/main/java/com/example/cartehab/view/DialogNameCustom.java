@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DialogNameCustom extends Dialog {
@@ -72,7 +70,7 @@ public class DialogNameCustom extends Dialog {
                 }
             }
 
-            this.dismiss(); // Close Dialog
+            this.dismiss();
 
             if(this.listener!= null)  {
                 this.listener.fullNameEntered(fullName);

@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.cartehab.R;
-import com.example.cartehab.models.Habitation;
 import com.example.cartehab.outils.FabriqueNumero;
 
 import org.json.JSONArray;
@@ -22,8 +20,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Classe représentant une activité permettant soit de dirigé vers ConstructionActivity soit vers VisualisationActivity.
+ * @author Claire Kurth
+ */
 public class MainActivity extends AppCompatActivity {
+    /**
+     * La listes des habitations déjà créaient.
+     */
     protected ArrayList<String> listeHabitation;
+
+    /**
+     * Méthode onCreate.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Cette méthode permet de lire la liste des noms des habitations déjà créée.
+     */
     public void openListeHabitation(){
         listeHabitation = new ArrayList<>();
         File file = new File(getApplicationContext().getFilesDir(),"listehabitation.json");
@@ -79,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Méthode onResume.
+     */
     @Override
     protected void onResume(){
         openListeHabitation();

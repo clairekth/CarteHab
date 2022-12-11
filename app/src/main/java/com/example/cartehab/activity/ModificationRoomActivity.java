@@ -19,7 +19,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,23 +44,71 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Classe représentant une activité permettant de modifier une pièce.
+ * @author Claire Kurth
+ */
 public class ModificationRoomActivity extends AppCompatActivity implements SensorEventListener {
+    /**
+     * L'habitation entrain d'être construite.
+     */
     protected Habitation hab;
+    /**
+     * La pièce entrain d'être modifier.
+     */
     protected Piece piece;
+    /**
+     * Le mur affiché actuellement.
+     */
     protected Mur m;
+    /**
+     * La liste des portes du mur affiché actuellement sous forme de bouton.
+     */
     protected ArrayList<Button> listeButtonPorte;
+    /**
+     * Le degré actuel du magnétomètre.
+     */
     protected float degree;
+    /**
+     * L'imageView contenant la photo du mur actuel.
+     */
     protected ImageView wall;
+    /**
+     * Le layout contenant les divers éléments.
+     */
     protected ConstraintLayout layout;
+    /**
+     * Le dernier temps d'update.
+     */
     protected long lastUpdateTime = 0;
+    /**
+     * Le manageur des sensors.
+     */
     protected SensorManager sensorManager;
+    /**
+     * TextView permettant d'afficher le nom de la pièce.
+     */
     protected TextView roomName;
+    /**
+     * booléan permettant de savoir si le dialog a était fermé ou non.
+     */
     private boolean dialogDismiss;
+    /**
+     * TextView permettant d'afficher l'orientation actuelle du téléphone.
+     */
     protected TextView orientation;
+    /**
+     * Bouton permettant de modifier les portes.
+     */
     protected Button modification;
+    /**
+     * ImageButton qui permet d'afficher dans une alert tous les problèmes de la pièce.
+     */
     protected ImageButton attention;
+    /**
+     * Booléan permettant de savoir si l'utilisateur a demandé à ce que la pièce soit supprimé.
+     */
     protected boolean pieceASuppr;
-
 
     /**
      * Champ contenant le capteur d'accélération.
@@ -93,13 +140,12 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
      */
     private final float[] orientationAngles = new float[3];
 
+    /**
+     * Launcher attendant le résuldat de l'activité SelectDoorActivity déclenchée lorsqu'une photo a été prise.
+     */
     final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    //m = (Mur) result.getData().getSerializableExtra("Mur");
-                    //piece.setMur(m);
-                    //String nomH = result.getData().getStringExtra("Hab");
-                    //hab = SaveManager.open(getApplicationContext(), nomH);
                     hab= Globals.getInstance().getDataHabitation();
                     if (piece.pieceEstOK()){
                         attention.setVisibility(View.INVISIBLE);
@@ -139,12 +185,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
-                        SaveManager.save(getApplicationContext(),hab);
+                        SaveManager.getInstance().save(getApplicationContext(),hab);
 
                         Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
-                        //intent.putExtra("Mur",m);
-                        //intent.putExtra("Hab", hab);
-                        //intent.putExtra("Hab", hab.getName());
                         Globals.getInstance().setDataHabitation(hab);
                         Globals.getInstance().setmData(m);
                         launcherSelectDoor.launch(intent);
@@ -156,18 +199,16 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             });
 
 
+    /**
+     * Méthode onCreate.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modification_room);
-        Intent i= getIntent();
-        //String nomHab = i.getStringExtra("Hab");
-        //hab = SaveManager.open(getApplicationContext(),nomHab);
-        //hab = (Habitation) i.getSerializableExtra("hab");
         pieceASuppr = false;
-
         hab = Globals.getInstance().getDataHabitation();
-
         roomName = findViewById(R.id.room_name);
         listeButtonPorte = new ArrayList<>();
         wall = findViewById(R.id.wall);
@@ -236,9 +277,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 Toast.makeText(ModificationRoomActivity.this, getResources().getString(R.string.impossible_modifier_mur), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ModificationRoomActivity.this,SelectDoorActivity.class);
-                //intent.putExtra("Mur",m);
-                //intent.putExtra("Hab", hab.getName());
-                //intent.putExtra("Hab", hab);
                 Globals.getInstance().setmData(m);
                 Globals.getInstance().setDataHabitation(hab);
                 launcherSelectDoor.launch(intent);
@@ -252,6 +290,10 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     }
 
+    /**
+     * Cette méthode permet de set la pièce actuelle après sa sélection par l'utilisateur.
+     * @param p La pièce à set.
+     */
     private void setPiece(Piece p){
         piece = p;
         if (!piece.pieceEstOK()) {
@@ -271,9 +313,13 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
+    /**
+     * Méthode qui change les données stockées de l'accéléromètre et magnétique en fonction des évènements.
+     * Elle change aussi l'affichage en fonction des données récoltées.
+     * @param event Evenement
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         /*Mise à jour des data de l'accéléromètre et du magnétomère*/
@@ -287,7 +333,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
             SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData);
             SensorManager.getOrientation(rotationMatrix, orientationAngles);
             degree = (float) Math.toDegrees(-orientationAngles[0]);
-            //Log.i("COmpass", "" + d);
 
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
@@ -303,17 +348,11 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
     }
 
 
-
+    /**
+     * Cette méthode permet de récupérer l'orientation actuelle du téléphone.
+     * @return l'orientation actuelle du téléphone.
+     */
     public String orientation(){
-        /*if (degree < 45 && degree >= -45){
-            return "Nord";
-        } else if (degree >= 45 && degree < 135){
-            return "Ouest";
-        } else if (degree < -45 && degree >= -135){
-            return "Est";
-        }
-        return "Sud";*/
-
         if (degree < 90) {
             return "Nord";
         } else if (degree >=90 && degree < 180) {
@@ -324,6 +363,9 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         return "Ouest";
     }
 
+    /**
+     * Cette méthode permet de set le visuel lié à l'orientation du téléphone.
+     */
     public void set3D(){
         if (orientation().equals("Nord")){
             orientation.setText(getResources().getString(R.string.nord));
@@ -394,6 +436,10 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         }
     }
 
+    /**
+     * Cette méthode permet d'afficher la photo et les portes du mur passé en paramètre.
+     * @param m le mur a affiché.
+     */
     public void afficherMur(Mur m){
         FileInputStream fis = null;
         try {
@@ -406,7 +452,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
-                //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
                     b.setText(getResources().getString(R.string.piece_suivante_non_creee));
@@ -414,13 +459,6 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
                     b.setText(p.getPieceSuivante().getNom());
                 }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
-                /*b.setOnClickListener(viewB -> {
-                    if (p.getPieceSuivante() != null) {
-                        Toast.makeText(ModificationRoomActivity.this, p.getPieceSuivante().getNom(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ModificationRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
                 listeButtonPorte.add(b);
                 layout.addView(b);
             }
@@ -469,30 +507,31 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         }
     }
 
-
+    /**
+     * Méthode onBackPressed. Save dans l'habitation en global & désenregistrement des sensors.
+     */
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
         Globals.getInstance().setDataHabitation(hab);
-        //SaveManager.save(getApplicationContext(),hab);
         Intent data = new Intent();
-        //data.putExtra("Hab", hab.getName());
-        //data.putExtra("Hab", hab);
-
         setResult(RESULT_OK, data);
 
         super.onBackPressed();
     }
 
+    /**
+     * Méthode onPause.
+     */
     @Override
     protected void onPause(){
         sensorManager.unregisterListener(ModificationRoomActivity.this);
-        /*Intent data = new Intent();
-        data.putExtra("Hab", hab);
-        setResult(RESULT_OK, data);*/
         super.onPause();
     }
 
+    /**
+     * Méthode onResume.
+     */
     @Override
     protected void onResume(){
         super.onResume();
@@ -500,13 +539,14 @@ public class ModificationRoomActivity extends AppCompatActivity implements Senso
         sensorManager.registerListener(ModificationRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    /**
+     * Méthode finish.
+     */
     @Override
     public void finish() {
         sensorManager.unregisterListener(ModificationRoomActivity.this);
-        //SaveManager.save(getApplicationContext(),hab);
         Globals.getInstance().setDataHabitation(hab);
         Intent data = new Intent();
-        //data.putExtra("Hab", hab.getName());
         setResult(RESULT_OK, data);
 
         super.finish();

@@ -1,0 +1,41 @@
+@startuml
+class com.example.cartehab.outils.Globals {
+- Habitation data
+- Mur mData
+.. Constructeur ..
+- Globals()
+.. Méthodes..
++ {static} Globals getInstance()
++ void setDataHabitation(Habitation)
++ Habitation getDataHabitation()
++ void setmData(Mur)
++ Mur getmData()
+}
+class com.example.cartehab.outils.FabriqueNumero {
+- int cptHabitation
+- int cptPiece
+.. Constructeur ..
+- FabriqueNumero()
+.. Méthodes..
++ {static} FabriqueNumero getInstance()
++ int getNumeroHabitation()
++ int getNumeroPiece()
++ void resetCompteurPiece()
++ int getNumeroHabitationSansIncre()
++ int getNumeroPieceSansIncre()
++ void setCptHabitation(int)
++ void setCptPiece(int)
+}
+class com.example.cartehab.outils.SaveManager {
+.. Constructeur ..
+- SaveManager()
+.. Méthodes..
++ {static} SaveManager getInstance()
++ void save(Context,Habitation)
++ Habitation open(Context,String)
+}
+
+com.example.cartehab.outils.SaveManager -- "1" com.example.cartehab.outils.SaveManager
+com.example.cartehab.outils.FabriqueNumero -- "1" com.example.cartehab.outils.FabriqueNumero
+com.example.cartehab.outils.Globals -- "1" com.example.cartehab.outils.Globals
+@enduml

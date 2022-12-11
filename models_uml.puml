@@ -1,0 +1,106 @@
+@startuml
+class com.example.cartehab.models.Porte {
+# int left
+# Mur mur
+# Piece pieceSuivante
+.. Constructeur ..
++ Porte(Mur,int,int,int,int)
+.. Méthodes ..
++ void setPieceSuivante(Piece)
++ String toString()
++ Piece getPieceSuivante()
++ int getLeft()
++ int getTop()
++ int getRight()
++ int getBottom()
++ Mur getMur()
++ int porteEstOK()
++ boolean porteVers(Piece)
+}
+class com.example.cartehab.models.Mur {
+# String id
+# Piece piece
+# String orientation
+# LocalTime heurePhoto
+# String temps
+.. Constructeur ..
++ Mur(Piece,String,String)
+.. Méthodes ..
++ void getMeteo(Activity)
++ void setTemps(String)
++ String getTemps()
++ void setHeurePhoto()
++ LocalTime getHeurePhoto()
++ void addPorte(Porte)
++ String toString()
++ Piece getPiece()
++ ArrayList<Porte> getListePortes()
++ String getId()
++ String getOrientation()
++ void deletePortes()
++ boolean murEstOK()
++ boolean murADesPortes()
++ boolean porteVers(Piece)
+- JSONObject readStream(InputStream)
+}
+class com.example.cartehab.models.Piece {
+# String id
+# String nom
+.. Constructeurs ..
++ Piece(String)
++ Piece(Habitation,String,String)
+.. Méthodes ..
++ String getId()
++ void setMur(Mur)
++ void setNom(String)
++ Mur getMurNord()
++ Mur getMurSud()
++ Mur getMurEst()
++ Mur getMurOuest()
++ String getNom()
++ boolean pieceEstOK()
++ String erreurs()
++ void suppressionSiEstUnePieceSuivante()
++ Mur getMur(String)
++ String toString()
+}
+class com.example.cartehab.models.Habitation {
+# String id
+# String name
+# int lastNumPiece
+.. Constructeur ..
++ Habitation()
+.. Méthodes ..
++ void setLastNumPiece(int)
++ int getLastNumPiece()
++ void addPiece(Piece)
++ void remove(Piece)
++ String getId()
++ String getName()
++ Piece getPiece(String)
++ ArrayList<Piece> getListePieces()
++ String toString()
++ boolean nomPieceExisteDeja(String)
++ void setName(String)
++ Graph<Piece,DefaultEdge> listToGraph()
++ List<Piece> getListSP(Graph<Piece,DefaultEdge>,Piece,Piece)
++ String indicationGPS(Piece,Piece)
++ boolean verificationCheminPossible(Piece,Piece)
++ Graph<String,DefaultEdge> nomPieceToGraph()
+}
+
+
+java.io.Serializable <|.. com.example.cartehab.models.Porte
+java.io.Serializable <|.. com.example.cartehab.models.Mur
+java.io.Serializable <|.. com.example.cartehab.models.Piece
+java.io.Serializable <|.. com.example.cartehab.models.Habitation
+
+com.example.cartehab.models.Piece "1" -right- "4" com.example.cartehab.models.Mur
+com.example.cartehab.models.Mur "1" -right- "*" com.example.cartehab.models.Porte
+com.example.cartehab.models.Habitation "1" -right- "*" com.example.cartehab.models.Piece
+com.example.cartehab.models.Piece "1" --  com.example.cartehab.models.Porte
+
+
+
+
+@enduml

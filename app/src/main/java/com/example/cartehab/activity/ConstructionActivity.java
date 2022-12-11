@@ -35,37 +35,55 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-
+/**
+ * Classe représentant une activité permettant la construction d'une habitation.
+ * @author Claire Kurth
+ */
 public class ConstructionActivity extends AppCompatActivity {
+    /**
+     * L'habitation en cours de constructions.
+     */
     protected Habitation hab;
+    /**
+     * Le nom de toutes les autres habitations déjà construites.
+     */
     protected ArrayList<String> listeHabitation;
+    /**
+     * Le TextView permettant l'affichage du nom de l'habitation.
+     */
     protected TextView nameHab;
+    /**
+     * Le nom de la dernière habitation créée.
+     */
     protected String nomLastHab;
 
+    /**
+     * Méthode permettant de set le visuel du nouveau mur devant lequel se trouve l'utilisateur lorsque
+     * celui si va à droite.
+     */
     final ActivityResultLauncher<Intent> launcherNewRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    //String nomH = result.getData().getStringExtra("Hab");
-                    //hab = SaveManager.open(getApplicationContext(), nomH);
-                    //Piece p = (Piece) result.getData().getSerializableExtra("Piece");
-                    //hab.addPiece(p);
                     hab = Globals.getInstance().getDataHabitation();
                 }
             });
 
+    /**
+     * Launcher attendant le résuldat de l'activité ModificationRoomActivity déclenché lors du clic sur le bouton permettant de modifier une pièce.
+     */
     final ActivityResultLauncher<Intent> launcherModificationRoom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    //String nomH = result.getData().getStringExtra("Hab");
-                    //hab = SaveManager.open(getApplicationContext(), nomH);
-                    //Habitation h = (Habitation) result.getData().getSerializableExtra("Hab");
-                    //hab = h;
                     hab = Globals.getInstance().getDataHabitation();
                 }
 
             });
 
 
+    /**
+     * Méthode onCreate.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +94,7 @@ public class ConstructionActivity extends AppCompatActivity {
             hab = new Habitation();
             listeHabitation.add(hab.getName());
         } else {
-            hab = SaveManager.open(getApplicationContext(),nomLastHab);
+            hab = SaveManager.getInstance().open(getApplicationContext(),nomLastHab);
             if (hab == null){
                 hab = new Habitation();
                 listeHabitation.add(hab.getName());
@@ -95,8 +113,6 @@ public class ConstructionActivity extends AppCompatActivity {
         Button newRoom = (Button) findViewById(R.id.new_room);
         newRoom.setOnClickListener(view -> {
             Intent intent = new Intent(ConstructionActivity.this, NewRoomActivity.class);
-            //intent.putExtra("Hab",hab.getName());
-            //intent.putExtra("hab",hab);
             launcherNewRoom.launch(intent);
         });
 
@@ -106,8 +122,6 @@ public class ConstructionActivity extends AppCompatActivity {
                 Toast.makeText(ConstructionActivity.this, getResources().getString(R.string.il_ny_a_pas_de_pieces), Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(ConstructionActivity.this, ModificationRoomActivity.class);
-                //intent.putExtra("Hab", hab.getName());
-                //intent.putExtra("hab",hab);
                 launcherModificationRoom.launch(intent);
             }
         });
@@ -117,7 +131,7 @@ public class ConstructionActivity extends AppCompatActivity {
             if (listeHabitation.size() == 1){
                 Toast.makeText(ConstructionActivity.this, getResources().getString(R.string.il_ny_a_pas_dautres_habitations), Toast.LENGTH_LONG).show();
             } else {
-                SaveManager.save(getApplicationContext(),hab);
+                SaveManager.getInstance().save(getApplicationContext(),hab);
                 saveListeHabitation(0);
                 AlertDialog d = alertOpenHabitation();
                 d.show();
@@ -127,13 +141,13 @@ public class ConstructionActivity extends AppCompatActivity {
 
         Button saveB = findViewById(R.id.save);
         saveB.setOnClickListener(view ->{
-            SaveManager.save(getApplicationContext(),hab);
+            SaveManager.getInstance().save(getApplicationContext(),hab);
             saveListeHabitation(0);
         });
 
         Button newHabitation = findViewById(R.id.new_habitation);
         newHabitation.setOnClickListener(view -> {
-            SaveManager.save(getApplicationContext(),hab);
+            SaveManager.getInstance().save(getApplicationContext(),hab);
             saveListeHabitation(0);
             newHabitation();
         });
@@ -145,6 +159,11 @@ public class ConstructionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Cette méthode permet de save au format jSon le nom de toutes les habitations créées ainsi que de la dernière créée.
+     * @param s 0 si la dernière habitation est celle ci, 1 si on est entrain de supprimer l'habitation actuelle, la dernière habitation
+     *          est donc celle d'avant.
+     */
     public void saveListeHabitation(int s){
         try {
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(openFileOutput("listehabitation.json", Context.MODE_PRIVATE)));
@@ -182,6 +201,10 @@ public class ConstructionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cette méthode permet de lire la liste des noms des habitations déjà créées.
+     * @return Le nom de la dernière habitation créée.
+     */
     public String openListeHabitation(){
         listeHabitation = new ArrayList<>();
         File file = new File(getApplicationContext().getFilesDir(),"listehabitation.json");
@@ -217,6 +240,9 @@ public class ConstructionActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Cette méthode permet de créer une nouvelle habitation.
+     */
     protected void newHabitation(){
         hab = new Habitation();
         nameHab.setText(hab.getName());
@@ -226,6 +252,10 @@ public class ConstructionActivity extends AppCompatActivity {
         Globals.getInstance().setmData(null);
     }
 
+    /**
+     * Cette méthode permet l'affichage d'une Alert permettant d'ouvrir une habitation.
+     * @return une AlertDialog.
+     */
     protected AlertDialog alertOpenHabitation(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.choisissez_habitation_a_ouvrir));
@@ -236,7 +266,7 @@ public class ConstructionActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-                hab = SaveManager.open(getApplicationContext(),finalNoms[n]);
+                hab = SaveManager.getInstance().open(getApplicationContext(),finalNoms[n]);
                 Globals.getInstance().setDataHabitation(hab);
                 Globals.getInstance().setmData(null);
                 nameHab.setText(hab.getName());
@@ -253,6 +283,10 @@ public class ConstructionActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    /**
+     * Cette méthode permet de supprimer l'habitation actuelle et ouvre à la place la dernière habitation créée.
+     * Si il n'y a pas d'autres habitations, elle en créée une nouvelle.
+     */
     public void supprimerHabitationEtOuvrirDerniereHabitation(){
         getApplicationContext().deleteFile(hab.getName()+".data");
         listeHabitation.remove(hab.getName());
@@ -269,7 +303,7 @@ public class ConstructionActivity extends AppCompatActivity {
             listeHabitation.add(hab.getName());
             FabriqueNumero.getInstance().resetCompteurPiece();
         } else {
-            hab = SaveManager.open(getApplicationContext(),nomLastHab1);
+            hab = SaveManager.getInstance().open(getApplicationContext(),nomLastHab1);
         }
         Globals.getInstance().setDataHabitation(hab);
         Globals.getInstance().setmData(null);
@@ -318,23 +352,32 @@ public class ConstructionActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Méthode onPause. Sauvegarde de l'habitation en cours et de la liste des habitations.
+     */
     @Override
     protected void onPause(){
-        SaveManager.save(getApplicationContext(),hab);
+        SaveManager.getInstance().save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.onPause();
     }
 
+    /**
+     * Méthode onBackPressed.Sauvegarde de l'habitation en cours et de la liste des habitations.
+     */
     @Override
     public void onBackPressed(){
-        SaveManager.save(getApplicationContext(),hab);
+        SaveManager.getInstance().save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.onBackPressed();
     }
 
+    /**
+     * Méthode finish.Sauvegarde de l'habitation en cours et de la liste des habitations.
+     */
     @Override
     public void finish(){
-        SaveManager.save(getApplicationContext(),hab);
+        SaveManager.getInstance().save(getApplicationContext(),hab);
         saveListeHabitation(0);
         super.finish();
     }

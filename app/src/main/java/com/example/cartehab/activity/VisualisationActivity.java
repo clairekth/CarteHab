@@ -4,21 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,35 +23,92 @@ import com.example.cartehab.models.Habitation;
 import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
-import com.example.cartehab.outils.Globals;
 import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogChooseDestinationRoom;
-import com.example.cartehab.view.DialogChooseRoomNext;
-import com.example.cartehab.view.GraphDialog;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+
+/**
+ * Classe représentant une activité permettant de visualiser une habitation.
+ * @author Claire Kurth
+ */
 public class VisualisationActivity extends AppCompatActivity {
+    /**
+     * La pièce actuelle.
+     */
     protected Piece p;
+    /**
+     * La liste des noms de toutes les habitations.
+     */
     protected ArrayList<String> listeHabitation;
+    /**
+     * TexTview permettant d'afficher le nom de la pièce actuelle.
+     */
     protected TextView roomName;
+    /**
+     * L'habitation visualisée.
+     */
     protected Habitation h;
+    /**
+     * Liste des portes du mur actuellement étant entrain d'être visualisé.
+     */
     protected ArrayList<Button> listeButtonPorte;
+    /**
+     * ImageView contenant la photo du mur visialisé.
+     */
     protected ImageView wall;
+    /**
+     * Layout contenant tous les éléments.
+     */
     protected ConstraintLayout layout;
+    /**
+     * TextView permettant d'afficher l'orientation actuelle.
+     */
     protected TextView orientation;
+    /**
+     * L'orientation actuelle du mur visualisée.
+     */
     private String orientationMur;
+    /**
+     * Bouton permettant de tourner à droite.
+     */
     protected Button droit;
+    /**
+     * Bouton permettant de tourner à gauche.
+     */
     protected Button gauche;
+    /**
+     * Tableau contenant les 4 points cardinaux.
+     */
     private String[] ptCardinaux = {"Nord", "Est", "Sud", "Ouest"};
+    /**
+     * indice permattant de savoir qu'elle point cardinaux est sélectionné.
+     */
     private int i = 0;
+    /**
+     * Bouton permettant d'activer le GPS pour se diriger vers une autre pièce.
+     */
     protected ImageButton goToButton;
+    /**
+     * boolean permettant de savoir si le gps est actuellement activé ou non.
+     */
     protected boolean gpsActif;
+    /**
+     * La pièce de destination lorsque le gps est activé.
+     */
     protected Piece pieceFinale;
+    /**
+     * Affichage des instructions à suivre.
+     */
     protected TextView instructions;
 
+    /**
+     * onCreate.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +126,7 @@ public class VisualisationActivity extends AppCompatActivity {
         orientationMur = "Nord";
         gpsActif = false;
 
+        /*Sélection de l'habitation à visualiser*/
         AlertDialog d = alertOpenHabitation();
         d.show();
 
@@ -91,19 +142,25 @@ public class VisualisationActivity extends AppCompatActivity {
 
         goToButton = findViewById(R.id.go_to_button);
         goToButton.setOnClickListener(view -> {
-            DialogChooseDestinationRoom.NameRoomNextListener listener = new DialogChooseDestinationRoom.NameRoomNextListener() {
-                @Override
-                public void nameRoomNext(String fullName) {
-                    pieceFinale = h.getPiece(fullName);
-                    gpsActif = true;
-                    gpsInstruction();
-                    set3D();
-                }
-            };
-            final DialogChooseDestinationRoom dialog = new DialogChooseDestinationRoom(VisualisationActivity.this, h,p,listener);
-            dialog.showAlertDialog();
+            if (h.getListePieces().size() < 2){
+                Toast.makeText(VisualisationActivity.this, "Il n'y a pas d'autres pièces", Toast.LENGTH_SHORT).show();
+            } else {
+                DialogChooseDestinationRoom.NameRoomNextListener listener = new DialogChooseDestinationRoom.NameRoomNextListener() {
+                    @Override
+                    public void nameRoomNext(String fullName) {
+                        pieceFinale = h.getPiece(fullName);
+                        gpsActif = true;
+                        gpsInstruction();
+                        set3D();
+                    }
+                };
+                final DialogChooseDestinationRoom dialog = new DialogChooseDestinationRoom(VisualisationActivity.this, h,p,listener);
+                dialog.showAlertDialog();
+            }
+
         });
 
+        /*Affichage des informations de l'heure et du temps lors de la prise de la photo si il y a un mur*/
         ImageButton information = findViewById(R.id.information_button);
         information.setOnClickListener(view -> {
             AlertDialog.Builder bd = new AlertDialog.Builder(this);
@@ -146,23 +203,23 @@ public class VisualisationActivity extends AppCompatActivity {
             alert.show();
         });
 
-
-        Button graph = findViewById(R.id.graph);
-        graph.setOnClickListener(view -> {
-            GraphDialog g = new GraphDialog(this,h.nomPieceToGraph());
-            g.show();
-        });
     }
 
 
-
+    /**
+     * Méthode permettant de set le visuel du nouveau mur devant lequel se trouve l'utilisateur lorsque
+     * celui si va à droite.
+     */
     protected void goDroite(){
         i = (i+1)%4;
         orientationMur = ptCardinaux[i];
         set3D();
         gpsInstruction();
     }
-
+    /**
+     * Méthode permettant de set le visuel du nouveau mur devant lequel se trouve l'utilisateur lorsque
+     * celui si va à gauche.
+     */
     protected void goGauche(){
         i = (i+3)%4; //i+3 modulo 4 <=> i-1
         orientationMur = ptCardinaux[i];
@@ -170,6 +227,9 @@ public class VisualisationActivity extends AppCompatActivity {
         gpsInstruction();
     }
 
+    /**
+     * Méthode permettant d'afficher l'instruction du GPS à suivre.
+     */
     protected void gpsInstruction(){
         if (gpsActif){
             if (p == pieceFinale){
@@ -179,8 +239,10 @@ public class VisualisationActivity extends AppCompatActivity {
             } else {
                 gauche.clearAnimation();
                 droit.clearAnimation();
+
                 String instruction = h.indicationGPS(p,pieceFinale);
                 instructions.setText(instruction);
+
                 String m = instructions.getText().toString().substring(25);
                 String mots[] = m.split(" et"); //Split pour récupérer juste le mots avant le " et" qui est l'orientation du Mur que l'on veux
                 Animation animation = new AlphaAnimation(1, 0);
@@ -217,6 +279,11 @@ public class VisualisationActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Méthode permettant de créer une AlertDialog pour sélectionner l'habitation à visualiser.
+     * @return L'AlertDialog créé.
+     */
     protected AlertDialog alertOpenHabitation(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.choisissez_habitation_a_ouvrir));
@@ -227,7 +294,7 @@ public class VisualisationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int n = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-                h = SaveManager.open(getApplicationContext(),finalNoms[n]);
+                h = SaveManager.getInstance().open(getApplicationContext(),finalNoms[n]);
                 if (h.getListePieces().size() == 0){
                     Toast.makeText(VisualisationActivity.this,"Pas de pièces de créées.",Toast.LENGTH_SHORT).show();
                     finish();
@@ -251,7 +318,9 @@ public class VisualisationActivity extends AppCompatActivity {
         return builder.create();
     }
 
-
+    /**
+     * Cette méthode permet de set le visuel lié à l'orientation du téléphone.
+     */
     public void set3D(){
         if (orientationMur.equals("Nord")){
             orientation.setText(getResources().getString(R.string.nord));
@@ -313,6 +382,10 @@ public class VisualisationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cette méthode permet d'afficher la photo et les portes du mur passé en paramètre.
+     * @param m le mur a affiché.
+     */
     public void afficherMur(Mur m){
         FileInputStream fis = null;
         try {

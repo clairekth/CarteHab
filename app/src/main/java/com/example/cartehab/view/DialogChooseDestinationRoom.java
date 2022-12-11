@@ -1,24 +1,12 @@
 package com.example.cartehab.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
-import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

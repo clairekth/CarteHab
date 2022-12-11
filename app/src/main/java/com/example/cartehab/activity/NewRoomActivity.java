@@ -17,11 +17,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cartehab.R;
 import com.example.cartehab.models.Habitation;
@@ -29,7 +27,6 @@ import com.example.cartehab.models.Mur;
 import com.example.cartehab.models.Piece;
 import com.example.cartehab.models.Porte;
 import com.example.cartehab.outils.Globals;
-import com.example.cartehab.outils.SaveManager;
 import com.example.cartehab.view.DialogNameCustom;
 
 import java.io.FileInputStream;
@@ -37,16 +34,46 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
+/**
+ * Classe représentant une activité permettant la création d'une pièce.
+ * @author Claire Kurth
+ */
 public class NewRoomActivity extends AppCompatActivity implements SensorEventListener {
+    /**
+     * La pièce entrain d'être créer actuellement.
+     */
     protected Piece p;
+    /**
+     * Le mur actuellement affiché.
+     */
     protected Mur m;
+    /**
+     * L'habitation contenant la pièce.
+     */
     protected Habitation h;
+    /**
+     * La liste des portes du mur affiché actuellement sous la forme de boutons.
+     */
     protected ArrayList<Button> listeButtonPorte;
+    /**
+     * Le degré actuel du magnétomètre.
+     */
     protected float degree;
+    /**
+     * ImageView permettant d'afficher la photo du mur actuel.
+     */
     protected ImageView wall;
+    /**
+     * Le layout où sont disposés tous les éléments.
+     */
     protected ConstraintLayout layout;
+    /**
+     * La dernière update.
+     */
     protected long lastUpdateTime = 0;
+    /**
+     * TextView comportant l'orientation actuelle du téléphone.
+     */
     protected TextView orientation;
 
     /**
@@ -85,14 +112,12 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
      */
     private final float[] orientationAngles = new float[3];
 
-
+    /**
+     * Launcher attendant le résuldat de l'activité SelectDoorActivity déclenchée lorsqu'une photo a été prise.
+     */
     final ActivityResultLauncher<Intent> launcherSelectDoor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    //m = (Mur) result.getData().getSerializableExtra("Mur");
-                    //p.setMur(m);
-                    //String nomH = result.getData().getStringExtra("Hab");
-                    //h = SaveManager.open(getApplicationContext(), nomH);
                     h = Globals.getInstance().getDataHabitation();
                 }
             });
@@ -129,14 +154,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
 
-                        //SaveManager.save(getApplicationContext(),h);
                         Globals.getInstance().setDataHabitation(h);
                         Globals.getInstance().setmData(m);
                         Intent intent = new Intent(NewRoomActivity.this,SelectDoorActivity.class);
-                        //intent.putExtra("Mur", m);
-                        //intent.putExtra("Hab",h.getName());
-                        //intent.putExtra("Hab", h);
-
                         launcherSelectDoor.launch(intent);
 
                     } catch (IOException e) {
@@ -146,15 +166,14 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             });
 
 
-
+    /**
+     * Méthode onCreate.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_room);
-        Intent i = getIntent();
-        //String nomH = i.getStringExtra("Hab");
-        //h = SaveManager.open(getApplicationContext(), nomH);
-        //h = (Habitation) i.getSerializableExtra("hab");
         h = Globals.getInstance().getDataHabitation();
         p = new Piece(h.getId());
 
@@ -191,10 +210,13 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
 
-        //sensorManager.registerListener(NewRoomActivity.this,sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        //sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    /**
+     * Méthode qui change les données stockées de l'accéléromètre et magnétique en fonction des évènements.
+     * Elle change aussi l'affichage en fonction des données récoltées.
+     * @param event Evenement
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         /*Mise à jour des data de l'accéléromètre et du magnétomère*/
@@ -210,13 +232,11 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
             degree = (float) Math.toDegrees(-orientationAngles[0]);
             ImageView compass = findViewById(R.id.compass);
             compass.setRotation(degree);
-            //Log.i("COmpass", "" + d);
 
             //Permet d'avoir un degree un peu plus stable
             degree = (float) Math.toDegrees((orientationAngles[0] + Math.PI*2) % (Math.PI*2));
 
             set3D();
-            //Log.i("ORIEN", orientation() + " : " + degree);
 
             lastUpdateTime = System.currentTimeMillis();
         }
@@ -225,19 +245,13 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
+    /**
+     * Cette méthode permet de récupérer l'orientation actuelle du téléphone.
+     * @return l'orientation actuelle du téléphone.
+     */
     public String orientation(){
-        /*if (degree < 45 && degree >= -45){
-            return "Nord";
-        } else if (degree >= 45 && degree < 135){
-            return "Ouest";
-        } else if (degree < -45 && degree >= -135){
-            return "Est";
-        }
-        return "Sud";*/
-
         if (degree < 90) {
             return "Nord";
         } else if (degree >=90 && degree < 180) {
@@ -248,6 +262,9 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         return "Ouest";
     }
 
+    /**
+     * Cette méthode permet de set le visuel lié à l'orientation du téléphone.
+     */
     public void set3D(){
         if (orientation().equals("Nord")){
             orientation.setText(getResources().getString(R.string.nord));
@@ -306,6 +323,10 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         }
     }
 
+    /**
+     * Cette méthode permet d'afficher la photo et les portes du mur passé en paramètre.
+     * @param m le mur a affiché.
+     */
     public void afficherMur(Mur m){
         FileInputStream fis = null;
         try {
@@ -318,7 +339,6 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                 b.setY(p.getTop());
                 b.setHeight(p.getBottom() - p.getTop());
                 b.setWidth(p.getRight() - p.getLeft());
-                //Log.i("Porte", "NewRoom : " + p.toString());
 
                 if (p.getPieceSuivante() == null){
                     b.setText(getResources().getString(R.string.piece_suivante_non_creee));
@@ -326,13 +346,7 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
                     b.setText(p.getPieceSuivante().getNom());
                 }
                 b.setBackgroundColor(Color.argb(60,50,156,123));
-                /*b.setOnClickListener(viewB -> {
-                    if (p.getPieceSuivante() != null) {
-                        Toast.makeText(NewRoomActivity.this, p.getPieceSuivante().toString(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(NewRoomActivity.this, "Pas de pièces suivantes", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
+
                 listeButtonPorte.add(b);
                 layout.addView(b);
             }
@@ -342,29 +356,33 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         }
     }
 
+    /**
+     * Méthode onBackPressed. Save dans l'habitation en global & désenregistrement des sensors.
+     */
     @Override
     public void onBackPressed(){
         sensorManager.unregisterListener(NewRoomActivity.this);
         h.addPiece(p);
-        //SaveManager.save(getApplicationContext(),h);
         Globals.getInstance().setDataHabitation(h);
 
         Intent data = new Intent();
-        //data.putExtra("Hab", h.getName());
-        //data.putExtra("Piece", p);
-
         setResult(RESULT_OK, data);
         finish();
         super.onBackPressed();
     }
 
+    /**
+     * Méthode onPause.
+     */
     @Override
     protected void onPause(){
         sensorManager.unregisterListener(NewRoomActivity.this);
-
         super.onPause();
     }
 
+    /**
+     * Méthode onResume.
+     */
     @Override
     protected void onResume(){
         super.onResume();
@@ -372,9 +390,12 @@ public class NewRoomActivity extends AppCompatActivity implements SensorEventLis
         sensorManager.registerListener(NewRoomActivity.this,sensorMagnetic, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    /**
+     * Méthode finish.
+     */
     @Override
     public void finish() {
-
+        sensorManager.unregisterListener(NewRoomActivity.this);
         super.finish();
     }
 }

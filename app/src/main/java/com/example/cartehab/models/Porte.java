@@ -1,15 +1,33 @@
 package com.example.cartehab.models;
 
-import android.graphics.Rect;
-import android.util.Log;
-
 import java.io.Serializable;
-
+/**
+ * La classe Porte représente une porte sur un mur.
+ * @author Claire Kurth
+ */
 public class Porte implements Serializable {
+    /**
+     * Coordoonées (x,y) du point haut gauche (left,top) et bas droit (right,bottom) d'un rectangle
+     * correspondant aux dimensions de la porte.
+     */
     protected int left, top, right, bottom;
+    /**
+     * Le mur contenant la porte.
+     */
     protected Mur mur;
+    /**
+     * La pièce vers laquelle mène la porte.
+     */
     protected Piece pieceSuivante;
 
+    /**
+     * Constructeur.
+     * @param m Le mur contenant la porte.
+     * @param l point x haut gauche.
+     * @param t point y haut gauche.
+     * @param r point x bas droite.
+     * @param b point y bas droite.
+     */
     public Porte(Mur m, int l, int t, int r, int b){
         mur = m;
         left = l;
@@ -19,6 +37,11 @@ public class Porte implements Serializable {
         pieceSuivante = null;
     }
 
+    /**
+     * Cette méthode permet de set la pièce vers laquelle mène la porte. Si il n'y a qu'une porte sur le mur opposé de
+     * la pièce suivante, set automatique de la pièce suivante comme étant this.
+     * @param p La pièce suivante.
+     */
     public void setPieceSuivante(Piece p) {
         if (p == null){
             pieceSuivante = null;
@@ -72,6 +95,10 @@ public class Porte implements Serializable {
 
     }
 
+    /**
+     * Cette méthode permet d'afficher les attributs de la classe pour le débugg.
+     * @return Un string avec les attributs de la classe.
+     */
     @Override
     public String toString() {
         if (pieceSuivante == null){
@@ -82,31 +109,59 @@ public class Porte implements Serializable {
                 "}\n";
     }
 
+    /**
+     * Cette méthode permet de récupérer la pièce suivante.
+     * @return la pièce suivante.
+     */
     public Piece getPieceSuivante(){
         return pieceSuivante;
     }
 
-
+    /**
+     * Cette méthode permet de récupérer le point x en haut à gauche.
+     * @return le point x en haut à gauche.
+     */
     public int getLeft() {
         return left;
     }
-
+    /**
+     * Cette méthode permet de récupérer le point y en haut à gauche.
+     * @return le point y en haut à gauche.
+     */
     public int getTop() {
         return top;
     }
-
+    /**
+     * Cette méthode permet de récupérer le point x en bas à droite.
+     * @return le point x en bas à droite.
+     */
     public int getRight() {
         return right;
     }
-
+    /**
+     * Cette méthode permet de récupérer le point y en bas à droite.
+     * @return le point y en bas à droite.
+     */
     public int getBottom() {
         return bottom;
     }
 
+    /**
+     * Cette méthode permet de récupérer le mur contenant la porte.
+     * @return le mur contenant la porte.
+     */
     public Mur getMur() {
         return mur;
     }
 
+    /**
+     * Cette méthode permet de vérifier que la porte a été construite correctement c'est à dire qu'elle contient bien
+     * une pièce suivante, que la pièce suivante contient bien un mur opposé à celui de this et qu'il contient bien
+     * une porte vers la pièce où this est située.
+     * @return  1 si la pièce suivante n'a pas de mur, 2 si le mur opposé de la pièce suivante n'a pas de portes,
+     * 3 si la pièce suivante n'a pas de portes vers la pièce contenant this, 4 si la pièce suivante n'a pas de mur opposé,
+     * 0 si tout est ok.
+     */
     public int porteEstOK(){
         if (pieceSuivante == null){
             return 1;
@@ -188,6 +243,11 @@ public class Porte implements Serializable {
         return 0;
     }
 
+    /**
+     * Cette méthode permet de savoir si la pièce suivante de this est la pièce passée en paramètre.
+     * @param p La pièce que l'on veux vérifier.
+     * @return true si la pièce suivante de this est p, false sinon.
+     */
     public boolean porteVers(Piece p){
         return pieceSuivante == p;
     }

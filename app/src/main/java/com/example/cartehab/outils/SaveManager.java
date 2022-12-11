@@ -21,7 +21,7 @@ public class SaveManager {
         return instance;
     }
 
-    public static void save(Context context, Habitation hab){
+    public void save(Context context, Habitation hab){
         FileOutputStream fos = null;
         ObjectOutputStream o = null;
         try {
@@ -36,7 +36,7 @@ public class SaveManager {
         }
     }
 
-    public static Habitation open(Context context, String name){
+    public Habitation open(Context context, String name){
         Habitation hab = null;
         try {
             FileInputStream fis =  context.openFileInput(name + ".data");
